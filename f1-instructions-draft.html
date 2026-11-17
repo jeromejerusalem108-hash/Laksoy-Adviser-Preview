@@ -152,6 +152,21 @@
             background: #356347;
         }
 
+        .continue-button[aria-disabled="true"] {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+
+        .access-message {
+            margin-top: 15px;
+            padding: 12px;
+            background: #f8e9e5;
+            color: #7b3025;
+            border-left: 4px solid #a94737;
+            border-radius: 5px;
+            font-size: 0.95rem;
+        }
+
         footer {
             background: #173d2b;
             color: #e9e8dc;
@@ -398,10 +413,22 @@
                 PROJECT L.A.K.A.S.
             </p>
 
-<a href="https://jeromejerusalem108-hash.github.io/Laksoy-de-Nipa-Packaging-Prototypes/evaluation.html"
-   class="continue-button">
-    Proceed to F1 Evaluation →
-</a>
+            <a
+                href="https://jeromejerusalem108-hash.github.io/Laksoy-de-Nipa-Packaging-Prototypes/evaluation.html"
+                class="continue-button"
+                id="proceed-button"
+                aria-disabled="true"
+            >
+                Proceed to F1 Evaluation →
+            </a>
+
+            <p
+                id="consent-status"
+                class="access-message"
+                role="alert"
+                aria-live="polite"
+                hidden
+            ></p>
 
         </div>
 
@@ -416,6 +443,77 @@
     <footer>
         PROJECT L.A.K.A.S. Research Team
     </footer>
+
+    <script>
+        const CONSENT_KEY = "project_lakas_f1_consent_v1";
+
+        const proceedButton =
+            document.getElementById("proceed-button");
+
+        const consentStatus =
+            document.getElementById("consent-status");
+
+        function hasValidConsent() {
+            try {
+                const savedConsent =
+                    sessionStorage.getItem(CONSENT_KEY);
+
+                if (!savedConsent) {
+                    return false;
+                }
+
+                const consentData =
+                    JSON.parse(savedConsent);
+
+                return consentData &&
+                    consentData.consent === "agree";
+
+            } catch (error) {
+                return false;
+            }
+        }
+
+        function updateProceedAccess() {
+            if (hasValidConsent()) {
+                proceedButton.setAttribute(
+                    "aria-disabled",
+                    "false"
+                );
+
+                consentStatus.hidden = true;
+                consentStatus.textContent = "";
+
+            } else {
+                proceedButton.setAttribute(
+                    "aria-disabled",
+                    "true"
+                );
+
+                consentStatus.hidden = false;
+
+                consentStatus.textContent =
+                    "Please return to the consent form and indicate that you agree to participate before proceeding to the F1 evaluation.";
+            }
+        }
+
+        proceedButton.addEventListener("click", function(event) {
+            if (!hasValidConsent()) {
+                event.preventDefault();
+
+                consentStatus.hidden = false;
+
+                consentStatus.textContent =
+                    "You cannot proceed without first agreeing to participate. Please return to the consent form.";
+
+                consentStatus.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center"
+                });
+            }
+        });
+
+        updateProceedAccess();
+    </script>
 
 </body>
 </html>
