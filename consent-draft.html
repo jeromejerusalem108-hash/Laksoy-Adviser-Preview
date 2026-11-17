@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PROJECT L.A.K.A.S. | Consent</title>
+    <title>PROJECT L.A.K.A.S. | Participant Consent</title>
 
     <style>
         * {
@@ -72,37 +72,12 @@
             accent-color: #244b35;
         }
 
-        .field {
-            margin-top: 17px;
-        }
-
-        .field label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 6px;
-        }
-
-        .field input {
-            width: 100%;
-            padding: 11px;
-            border: 1px solid #c9c9bd;
-            border-radius: 4px;
-            font-size: 1rem;
-        }
-
         .notice {
             background: #e9e8dc;
             border-left: 4px solid #9a8248;
             padding: 16px;
             border-radius: 4px;
             margin-bottom: 24px;
-        }
-
-        .pending {
-            background: #f5e8e5;
-            border-left: 4px solid #a34b3e;
-            padding: 16px;
-            border-radius: 4px;
         }
 
         .navigation {
@@ -126,16 +101,16 @@
             border: 1px solid #244b35;
         }
 
-.next {
-    background: #244b35;
-    color: white;
-    cursor: pointer;
-    transition: background 0.2s;
-}
+        .next {
+            background: #244b35;
+            color: white;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
 
-.next:hover {
-    background: #356347;
-}
+        .next:hover {
+            background: #356347;
+        }
 
         footer {
             background: #173d2b;
@@ -167,9 +142,10 @@
     <main>
 
         <div class="notice">
-            <strong>Please read carefully.</strong>
-            This is a draft consent page for adviser review.
-            It is not an active consent or response-submission form.
+            <strong>Voluntary Participation and Anonymity</strong>
+            Your participation is voluntary. Your name and signature
+            will not be requested through this evaluation website.
+            Your responses will be handled anonymously.
         </div>
 
         <section>
@@ -184,7 +160,7 @@
 
             <p>
                 You may ask the research team to clarify any part
-                of the activity before deciding.
+                of the activity before deciding whether to participate.
             </p>
         </section>
 
@@ -192,8 +168,8 @@
             <h2>2. Decision to Participate</h2>
 
             <p>
-                Please indicate your decision after reading the
-                Participant Information document.
+                After reading the Participant Information document,
+                please indicate your decision.
             </p>
 
             <label class="choice">
@@ -219,7 +195,8 @@
                 This is a separate and optional decision.
                 It concerns whether short, de-identified quotations
                 from your comments may be included in research
-                reporting.
+                reporting. Your decision will not affect your
+                participation in the study.
             </p>
 
             <label class="choice">
@@ -233,70 +210,21 @@
             <label class="choice">
                 <input type="radio" name="quotation" value="decline">
                 <span>
-                    I do not permit quotations. A blank means
-                    no quotation permission.
+                    I do not permit quotations. A blank response
+                    means no quotation permission.
                 </span>
             </label>
         </section>
 
-        <section>
-            <h2>4. Participant Details</h2>
+        <div class="navigation">
+            <a class="back" href="eligibility-draft.html">
+                Back to Eligibility
+            </a>
 
-            <p>
-                The following fields are retained from the
-                manuscript's printed consent procedure.
-                Their digital use is subject to adviser approval.
-            </p>
-
-            <div class="field">
-                <label for="participantName">Participant name</label>
-                <input id="participantName" type="text"
-                    placeholder="For draft layout only" disabled>
-            </div>
-
-            <div class="field">
-                <label for="participantSignature">Participant signature</label>
-                <input id="participantSignature" type="text"
-                    placeholder="Signature procedure pending approval" disabled>
-            </div>
-
-            <div class="field">
-                <label for="participantDate">Date</label>
-                <input id="participantDate" type="date" disabled>
-            </div>
-
-            <div class="field">
-                <label for="explainedBy">Adult explaining the activity</label>
-                <input id="explainedBy" type="text"
-                    placeholder="To be completed according to approved procedure"
-                    disabled>
-            </div>
-
-            <div class="field">
-                <label for="respondentCode">Respondent code</label>
-                <input id="respondentCode" type="text"
-                    placeholder="To be assigned through approved procedure"
-                    disabled>
-            </div>
-        </section>
-
-        <div class="pending">
-            <strong>Consent submission is not yet enabled.</strong>
-            The research adviser must approve the digital consent
-            method, signature procedure, data handling, and
-            participant record process before this page is used
-            for actual participants.
+            <a class="next" href="f1-instructions-draft.html">
+                Continue to F1 Evaluation Instructions →
+            </a>
         </div>
-
-<div class="navigation">
-    <a class="back" href="eligibility-draft.html">
-        Back to Eligibility
-    </a>
-
-    <a class="next" href="f1-instructions-draft.html">
-        Continue to F1 Evaluation Instructions →
-    </a>
-</div>
 
     </main>
 
