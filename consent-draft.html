@@ -112,6 +112,12 @@
             background: #356347;
         }
 
+        #consentStatus {
+            color: #9a3c32;
+            font-weight: bold;
+            margin-top: 12px;
+        }
+
         footer {
             background: #173d2b;
             color: #e9e8dc;
@@ -143,9 +149,11 @@
 
         <div class="notice">
             <strong>Voluntary Participation and Anonymity</strong>
-            Your participation is voluntary. Your name and signature
-            will not be requested through this evaluation website.
-            Your responses will be handled anonymously.
+            <p>
+                Your participation is voluntary. Your name and signature
+                will not be requested through this evaluation website.
+                Your responses will be handled anonymously.
+            </p>
         </div>
 
         <section>
@@ -216,12 +224,15 @@
             </label>
         </section>
 
+        <p id="consentStatus" role="alert" aria-live="polite"></p>
+
         <div class="navigation">
             <a class="back" href="eligibility-draft.html">
                 Back to Eligibility
             </a>
 
-            <a class="next" href="f1-instructions-draft.html">
+            <a class="next" href="f1-instructions-draft.html"
+               id="continueButton">
                 Continue to F1 Evaluation Instructions →
             </a>
         </div>
@@ -231,6 +242,76 @@
     <footer>
         PROJECT L.A.K.A.S. Research Team
     </footer>
+
+    <script>
+        const CONSENT_KEY = "project_lakas_f1_consent_v1";
+
+        const continueButton =
+            document.getElementById("continueButton");
+
+        const consentStatus =
+            document.getElementById("consentStatus");
+
+        continueButton.addEventListener("click", function(event) {
+
+            event.preventDefault();
+
+            const consentChoice =
+                document.querySelector(
+                    'input[name="consent"]:checked'
+                );
+
+            const quotationChoice =
+                document.querySelector(
+                    'input[name="quotation"]:checked'
+                );
+
+            if (!consentChoice) {
+                consentStatus.textContent =
+                    "Please indicate whether you agree or decline participation.";
+                return;
+            }
+
+            if (consentChoice.value !== "agree") {
+
+                sessionStorage.removeItem(CONSENT_KEY);
+
+                consentStatus.textContent =
+                    "You have declined participation. You cannot proceed to the evaluation.";
+
+                return;
+            }
+
+            const quotationPermission =
+                quotationChoice &&
+                quotationChoice.value === "permit"
+                    ? "permit"
+                    : "decline";
+
+            const consentRecord = {
+                consent: "agree",
+                quotationPermission: quotationPermission
+            };
+
+            try {
+
+                sessionStorage.setItem(
+                    CONSENT_KEY,
+                    JSON.stringify(consentRecord)
+                );
+
+                window.location.href =
+                    "f1-instructions-draft.html";
+
+            } catch (error) {
+
+                consentStatus.textContent =
+                    "Your browser could not save the consent decision. Please enable session storage before continuing.";
+
+            }
+
+        });
+    </script>
 
 </body>
 </html>
