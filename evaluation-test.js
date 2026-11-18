@@ -921,6 +921,24 @@ if (!bridgeFrame || !submitButton || !submissionStatus) {
 
 bridgeFrame.name = "f1SubmissionBridge";
 
+// TEMPORARY DIAGNOSTIC — iframe loading
+bridgeFrame.addEventListener("load", function () {
+    bridgeFrame.dataset.loadComplete = "true";
+
+    console.log(
+        "PROJECT LAKAS: Submission iframe loaded.",
+        bridgeFrame.src
+    );
+});
+
+bridgeFrame.addEventListener("error", function () {
+    bridgeFrame.dataset.loadError = "true";
+
+    console.error(
+        "PROJECT LAKAS: Submission iframe failed to load."
+    );
+});
+
 let pendingRequestId = null;
 let submissionTimeout = null;
 
