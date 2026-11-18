@@ -1103,22 +1103,6 @@ form.appendChild(requestIdInput);
 
 document.body.appendChild(form);
 
-// TEMPORARY DIAGNOSTIC — DO NOT SUBMIT
-console.log(
-    "PROJECT LAKAS: Form target diagnostic",
-    {
-        formTarget: form.target,
-        iframeName: bridgeFrame.name,
-        iframeConnected: bridgeFrame.isConnected,
-        targetWindowMatches:
-            bridgeFrame.contentWindow ===
-            window.frames[form.target]
-    }
-);
-
-return;
-
-
 pendingRequestId = requestId;
 
             submitButton.disabled = true;
