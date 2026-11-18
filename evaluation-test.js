@@ -1082,6 +1082,9 @@ let submissionTimeout = null;
 form.appendChild(payloadInput);
 form.appendChild(requestIdInput);
 
+
+document.body.appendChild(form);
+
 // TEMPORARY DIAGNOSTIC — DO NOT SUBMIT
 console.log(
     "PROJECT LAKAS: Form target diagnostic",
@@ -1097,7 +1100,6 @@ console.log(
 
 return;
 
-document.body.appendChild(form);
 
 pendingRequestId = requestId;
 
