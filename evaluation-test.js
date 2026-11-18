@@ -1143,9 +1143,18 @@ pendingRequestId = requestId;
 
             }, 30000);
 
-            form.submit();
-            form.remove();
+form.submit();
 
+// TEMPORARY DIAGNOSTIC:
+// Keep the submitted form in the DOM while testing.
+console.log(
+    "PROJECT LAKAS: Form submitted to hidden iframe.",
+    {
+        target: form.target,
+        iframeConnected: bridgeFrame.isConnected,
+        formConnected: form.isConnected
+    }
+);
         } catch (error) {
 
             if (submissionTimeout) {
