@@ -889,57 +889,260 @@ if (reviewResponsesButton) {
     });
 }
 
+
 /*
  * PROJECT L.A.K.A.S.
- * Apps Script Bridge Connection
+ * Apps Script Submission Bridge
  */
 
 (function setupF1Bridge() {
 
+    const WEB_APP_URL =
+        "https://script.google.com/macros/s/AKfycbzntkKXBkR-pxIB2iUtcaSEKCxWT4MWlb5-HcrwU9XpHISNms_ZXNeOmRe0xA9fuun4kw/exec";
+
+    const TRUSTED_PARENT_ORIGIN =
+        "https://jeromejerusalem108-hash.github.io";
+
     const bridgeFrame =
         document.getElementById("f1SubmissionBridge");
 
-    if (!bridgeFrame) {
+    const submitButton =
+        document.getElementById("submitEvaluationButton");
+
+    const submissionStatus =
+        document.getElementById("submissionStatus");
+
+    if (!bridgeFrame || !submitButton || !submissionStatus) {
         console.error(
-            "F1 Submission Bridge iframe not found."
+            "PROJECT LAKAS: Required submission elements were not found."
         );
         return;
     }
 
-    const allowedOrigins = new Set([
-        "https://script.google.com",
-        "https://script.googleusercontent.com"
-    ]);
+    let pendingRequestId = null;
+    let submissionTimeout = null;
 
-    window.f1BridgeReady = false;
+    // Generate a unique ID for each submission attempt.
+    function generateRequestId() {
+        if (
+            !window.crypto ||
+            !window.crypto.getRandomValues
+        ) {
+            throw new Error(
+                "Secure request ID generation is unavailable."
+            );
+        }
 
+        if (typeof window.crypto.randomUUID === "function") {
+            return window.crypto.randomUUID();
+        }
+
+        const bytes = new Uint8Array(16);
+        window.crypto.getRandomValues(bytes);
+
+        bytes[6] = (bytes[6] & 0x0f) | 0x40;
+        bytes[8] = (bytes[8] & 0x3f) | 0x80;
+
+        const hex = Array.from(bytes, byte =>
+            byte.toString(16).padStart(2, "0")
+        );
+
+        return [
+            hex.slice(0, 4).join(""),
+            hex.slice(4, 6).join(""),
+            hex.slice(6, 8).join(""),
+            hex.slice(8, 10).join(""),
+            hex.slice(10, 16).join("")
+        ].join("-");
+    }
+
+    // Check whether a message came from an accepted Apps Script origin.
+    function isTrustedAppsScriptOrigin(origin) {
+        try {
+            const hostname = new URL(origin).hostname;
+
+            return (
+                hostname === "script.google.com" ||
+                hostname.endsWith(".script.googleusercontent.com")
+            );
+
+        } catch (error) {
+            return false;
+        }
+    }
+
+    // Display the submission result.
+    function displaySubmissionResult(result) {
+
+        if (!result || typeof result !== "object") {
+            submissionStatus.textContent =
+                "The server returned an invalid response. Please try again.";
+
+            return;
+        }
+
+        if (result.success === true) {
+
+            if (result.duplicate === true) {
+                submissionStatus.textContent =
+                    result.message ||
+                    "This submission has already been received.";
+
+            } else {
+                submissionStatus.textContent =
+                    (result.message || "Submission received.") +
+                    " Submission reference: " +
+                    (result.submissionId || "Unavailable") +
+                    ". Records saved: " +
+                    (result.recordsSaved ?? "Unavailable") +
+                    ".";
+            }
+
+            return;
+        }
+
+        submissionStatus.textContent =
+            result.message ||
+            "The submission could not be processed. Please try again.";
+    }
+
+    // Receive the response from Apps Script.
     window.addEventListener("message", function(event) {
 
-        if (event.source !== bridgeFrame.contentWindow) {
+        if (!isTrustedAppsScriptOrigin(event.origin)) {
             return;
         }
 
-        if (!allowedOrigins.has(event.origin)) {
-            return;
-        }
+        const data = event.data;
 
         if (
-            !event.data ||
-            event.data.type !== "PROJECT_LAKAS_BRIDGE_READY"
+            !data ||
+            data.type !== "PROJECT_LAKAS_RESULT"
         ) {
             return;
         }
 
-        window.f1BridgeReady = true;
+        // Accept only the response for the current request.
+        if (
+            !pendingRequestId ||
+            data.requestId !== pendingRequestId
+        ) {
+            return;
+        }
 
-        console.log(
-            "PROJECT LAKAS: Submission bridge is ready."
-        );
+        clearTimeout(submissionTimeout);
+        submissionTimeout = null;
+        pendingRequestId = null;
+
+        submitButton.disabled = false;
+
+        displaySubmissionResult(data.result);
 
     });
 
-    // Load the deployed Apps Script Web App.
-    bridgeFrame.src =
-        "https://script.google.com/macros/s/AKfycbzntkKXBkR-pxIB2iUtcaSEKCxWT4MWlb5-HcrwU9XpHISNms_ZXNeOmRe0xA9fuun4kw/exec";
+    // Submit the evaluation through a standard HTML form.
+    function submitF1Evaluation() {
+
+        if (pendingRequestId) {
+            return;
+        }
+
+        try {
+
+            const payload =
+                createF1SubmissionPayload();
+
+            const requestId =
+                generateRequestId();
+
+            const form =
+                document.createElement("form");
+
+            form.method = "POST";
+            form.action = WEB_APP_URL;
+            form.target = "f1SubmissionBridge";
+            form.style.display = "none";
+
+            const payloadInput =
+                document.createElement("input");
+
+            payloadInput.type = "hidden";
+            payloadInput.name = "payload";
+            payloadInput.value = JSON.stringify(payload);
+
+            const requestIdInput =
+                document.createElement("input");
+
+            requestIdInput.type = "hidden";
+            requestIdInput.name = "requestId";
+            requestIdInput.value = requestId;
+
+            form.appendChild(payloadInput);
+            form.appendChild(requestIdInput);
+
+            document.body.appendChild(form);
+
+            pendingRequestId = requestId;
+
+            submitButton.disabled = true;
+
+            submissionStatus.textContent =
+                "Submitting your evaluation. Please wait and do not close this page.";
+
+            // Prevent the page from remaining locked indefinitely.
+            submissionTimeout = setTimeout(() => {
+
+                if (pendingRequestId !== requestId) {
+                    return;
+                }
+
+                pendingRequestId = null;
+                submissionTimeout = null;
+
+                submitButton.disabled = false;
+
+                submissionStatus.textContent =
+                    "No confirmation was received. Your submission may still have reached the server. You may retry; the anonymous retry token helps prevent duplicate records.";
+
+            }, 30000);
+
+            form.submit();
+            form.remove();
+
+        } catch (error) {
+
+            if (submissionTimeout) {
+                clearTimeout(submissionTimeout);
+                submissionTimeout = null;
+            }
+
+            pendingRequestId = null;
+            submitButton.disabled = false;
+
+            submissionStatus.textContent =
+                error.message ||
+                "Unable to prepare your submission. Please try again.";
+
+            console.error(
+                "PROJECT LAKAS submission error:",
+                error
+            );
+        }
+    }
+
+    // Connect the Submit Evaluation button.
+    submitButton.addEventListener(
+        "click",
+        submitF1Evaluation
+    );
+
+    // Load the Apps Script web application into the hidden iframe.
+    bridgeFrame.src = WEB_APP_URL;
+
+    window.f1BridgeReady = true;
+
+    console.log(
+        "PROJECT LAKAS: Submission form bridge initialized."
+    );
 
 })();
