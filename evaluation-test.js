@@ -912,15 +912,17 @@ if (reviewResponsesButton) {
     const submissionStatus =
         document.getElementById("submissionStatus");
 
-    if (!bridgeFrame || !submitButton || !submissionStatus) {
-        console.error(
-            "PROJECT LAKAS: Required submission elements were not found."
-        );
-        return;
-    }
+if (!bridgeFrame || !submitButton || !submissionStatus) {
+    console.error(
+        "PROJECT LAKAS: Required submission elements were not found."
+    );
+    return;
+}
 
-    let pendingRequestId = null;
-    let submissionTimeout = null;
+bridgeFrame.name = "f1SubmissionBridge";
+
+let pendingRequestId = null;
+let submissionTimeout = null;
 
     // Generate a unique ID for each submission attempt.
     function generateRequestId() {
