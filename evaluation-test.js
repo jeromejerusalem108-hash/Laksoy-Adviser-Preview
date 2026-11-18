@@ -1079,12 +1079,27 @@ let submissionTimeout = null;
             requestIdInput.name = "requestId";
             requestIdInput.value = requestId;
 
-            form.appendChild(payloadInput);
-            form.appendChild(requestIdInput);
+form.appendChild(payloadInput);
+form.appendChild(requestIdInput);
 
-            document.body.appendChild(form);
+// TEMPORARY DIAGNOSTIC — DO NOT SUBMIT
+console.log(
+    "PROJECT LAKAS: Form target diagnostic",
+    {
+        formTarget: form.target,
+        iframeName: bridgeFrame.name,
+        iframeConnected: bridgeFrame.isConnected,
+        targetWindowMatches:
+            bridgeFrame.contentWindow ===
+            window.frames[form.target]
+    }
+);
 
-            pendingRequestId = requestId;
+return;
+
+document.body.appendChild(form);
+
+pendingRequestId = requestId;
 
             submitButton.disabled = true;
 
