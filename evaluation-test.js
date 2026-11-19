@@ -1241,14 +1241,41 @@ function showF1ResponseReview() {
         worksWellHeading.textContent =
             "What Works Well? / Ano ang maganda sa disenyo?";
 
-        const worksWellResponse =
-            document.createElement("p");
+const worksWellResponse =
+    document.createElement("p");
 
-        worksWellResponse.textContent =
-            answers.worksWell || "No selection provided.";
+const selectedStrengths =
+    Array.isArray(answers.worksWellSelections)
+        ? answers.worksWellSelections
+        : [];
 
-        worksWellResponse.style.marginBottom = "14px";
-        worksWellResponse.style.fontSize = "13px";
+const bilingualStrengths = F1_STRENGTH_OPTIONS
+    .filter(option =>
+        selectedStrengths.includes(option.value)
+    )
+    .map(option => `${option.en} / ${option.tl}`);
+
+if (
+    selectedStrengths.includes(F1_OTHER_VALUE) &&
+    answers.worksWellOther &&
+    answers.worksWellOther.trim()
+) {
+    bilingualStrengths.push(
+        `Others / Iba pa: ${answers.worksWellOther.trim()}`
+    );
+}
+
+worksWellResponse.textContent =
+    bilingualStrengths.length > 0
+        ? bilingualStrengths.join("; ")
+        : (
+            answers.worksWell
+                ? answers.worksWell
+                : "No selection provided. / Walang piniling sagot."
+        );
+
+worksWellResponse.style.marginBottom = "14px";
+worksWellResponse.style.fontSize = "13px";
 
         const improvementsHeading =
             document.createElement("strong");
@@ -1259,8 +1286,10 @@ function showF1ResponseReview() {
         const improvementsResponse =
             document.createElement("p");
 
-        improvementsResponse.textContent =
-            answers.improvements || "No suggestion provided.";
+improvementsResponse.textContent =
+    answers.improvements
+        ? answers.improvements
+        : "No suggestion provided. / Walang mungkahing ibinigay.";
 
         improvementsResponse.style.marginBottom = "0";
         improvementsResponse.style.fontSize = "13px";
