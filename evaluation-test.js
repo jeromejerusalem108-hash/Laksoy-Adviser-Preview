@@ -1008,7 +1008,6 @@ function showF1ResponseReview() {
         reviewPanel = document.createElement("div");
         reviewPanel.id = "responseReviewPanel";
         reviewPanel.className = "response-review-panel";
-
         submissionSection.appendChild(reviewPanel);
     }
 
@@ -1084,18 +1083,9 @@ function showF1ResponseReview() {
     summary.style.margin = "16px 0";
 
     const summaryItems = [
-        {
-            label: "Answered",
-            value: answeredCount
-        },
-        {
-            label: "Cannot Judge",
-            value: cannotJudgeCount
-        },
-        {
-            label: "Unanswered",
-            value: unansweredCount
-        }
+        { label: "Answered", value: answeredCount },
+        { label: "Cannot Judge", value: cannotJudgeCount },
+        { label: "Unanswered", value: unansweredCount }
     ];
 
     summaryItems.forEach(item => {
@@ -1235,81 +1225,156 @@ function showF1ResponseReview() {
 
         card.appendChild(feedbackHeading);
 
+        const feedbackBox =
+            document.createElement("div");
+
+        feedbackBox.style.background = "#f5f5f5";
+        feedbackBox.style.padding = "14px";
+        feedbackBox.style.borderRadius = "8px";
+
+        // What Works Well heading and bilingual selections.
         const worksWellHeading =
             document.createElement("strong");
 
         worksWellHeading.textContent =
             "What Works Well? / Ano ang maganda sa disenyo?";
 
-const worksWellResponse =
-    document.createElement("p");
+        worksWellHeading.style.display = "block";
+        worksWellHeading.style.marginBottom = "10px";
 
-const selectedStrengths =
-    Array.isArray(answers.worksWellSelections)
-        ? answers.worksWellSelections
-        : [];
+        feedbackBox.appendChild(worksWellHeading);
 
-const bilingualStrengths = F1_STRENGTH_OPTIONS
-    .filter(option =>
-        selectedStrengths.includes(option.value)
-    )
-    .map(option => `${option.en} / ${option.tl}`);
+        const selectedStrengths =
+            Array.isArray(answers.worksWellSelections)
+                ? answers.worksWellSelections
+                : [];
 
-if (
-    selectedStrengths.includes(F1_OTHER_VALUE) &&
-    answers.worksWellOther &&
-    answers.worksWellOther.trim()
-) {
-    bilingualStrengths.push(
-        `Others / Iba pa: ${answers.worksWellOther.trim()}`
-    );
-}
-
-worksWellResponse.textContent =
-    bilingualStrengths.length > 0
-        ? bilingualStrengths.join("; ")
-        : (
-            answers.worksWell
-                ? answers.worksWell
-                : "No selection provided. / Walang piniling sagot."
+        const selectedOptions = F1_STRENGTH_OPTIONS.filter(
+            option => selectedStrengths.includes(option.value)
         );
 
-worksWellResponse.style.marginBottom = "14px";
-worksWellResponse.style.fontSize = "13px";
+        if (selectedOptions.length > 0) {
+            const strengthGrid =
+                document.createElement("div");
 
+            strengthGrid.style.display = "grid";
+            strengthGrid.style.gridTemplateColumns =
+                "repeat(auto-fit, minmax(190px, 1fr))";
+            strengthGrid.style.gap = "8px";
+            strengthGrid.style.marginBottom = "12px";
+
+            selectedOptions.forEach(option => {
+                const strengthItem =
+                    document.createElement("div");
+
+                strengthItem.style.background = "#ffffff";
+                strengthItem.style.border = "1px solid #dedede";
+                strengthItem.style.borderRadius = "6px";
+                strengthItem.style.padding = "10px";
+
+                const english =
+                    document.createElement("div");
+
+                english.textContent = option.en;
+                english.style.fontWeight = "600";
+                english.style.fontSize = "13px";
+
+                const tagalog =
+                    document.createElement("div");
+
+                tagalog.textContent = option.tl;
+                tagalog.style.fontSize = "12px";
+                tagalog.style.color = "#666666";
+                tagalog.style.marginTop = "3px";
+
+                strengthItem.append(english, tagalog);
+                strengthGrid.appendChild(strengthItem);
+            });
+
+            feedbackBox.appendChild(strengthGrid);
+        }
+
+        // Show the participant's Others response separately.
+        const hasOtherSelection =
+            selectedStrengths.includes(F1_OTHER_VALUE);
+
+        const otherText =
+            typeof answers.worksWellOther === "string"
+                ? answers.worksWellOther.trim()
+                : "";
+
+        if (hasOtherSelection) {
+            const otherBox =
+                document.createElement("div");
+
+            otherBox.style.background = "#ffffff";
+            otherBox.style.borderLeft = "3px solid #888888";
+            otherBox.style.padding = "10px";
+            otherBox.style.marginBottom = "12px";
+
+            const otherHeading =
+                document.createElement("div");
+
+            otherHeading.textContent = "Others / Iba pa";
+            otherHeading.style.fontWeight = "600";
+            otherHeading.style.fontSize = "13px";
+
+            otherBox.appendChild(otherHeading);
+
+            const otherResponse =
+                document.createElement("p");
+
+            otherResponse.textContent =
+                otherText || "No additional details provided. / Walang karagdagang detalye.";
+
+            otherResponse.style.fontSize = "13px";
+            otherResponse.style.margin = "5px 0 0";
+
+            otherBox.appendChild(otherResponse);
+            feedbackBox.appendChild(otherBox);
+        } else if (selectedOptions.length === 0) {
+            const noSelection =
+                document.createElement("p");
+
+            noSelection.textContent =
+                answers.worksWell
+                    ? answers.worksWell
+                    : "No selection provided. / Walang piniling sagot.";
+
+            noSelection.style.fontSize = "13px";
+            noSelection.style.margin = "0 0 12px";
+
+            feedbackBox.appendChild(noSelection);
+        }
+
+        // Suggested Improvements remains a separate text section.
         const improvementsHeading =
             document.createElement("strong");
 
         improvementsHeading.textContent =
             "Suggested Improvements / Mga mungkahing pagpapabuti";
 
+        improvementsHeading.style.display = "block";
+        improvementsHeading.style.marginTop = "6px";
+        improvementsHeading.style.marginBottom = "6px";
+
         const improvementsResponse =
             document.createElement("p");
 
-improvementsResponse.textContent =
-    answers.improvements
-        ? answers.improvements
-        : "No suggestion provided. / Walang mungkahing ibinigay.";
+        improvementsResponse.textContent =
+            answers.improvements
+                ? answers.improvements
+                : "No suggestion provided. / Walang mungkahing ibinigay.";
 
-        improvementsResponse.style.marginBottom = "0";
         improvementsResponse.style.fontSize = "13px";
-
-        const feedbackBox =
-            document.createElement("div");
-
-        feedbackBox.style.background = "#f5f5f5";
-        feedbackBox.style.padding = "12px";
-        feedbackBox.style.borderRadius = "6px";
+        improvementsResponse.style.margin = "0";
 
         feedbackBox.append(
-            worksWellHeading,
-            worksWellResponse,
             improvementsHeading,
             improvementsResponse
         );
 
         card.appendChild(feedbackBox);
-
         reviewPanel.appendChild(card);
 
         if (code === previouslyOpenCode) {
@@ -1321,7 +1386,6 @@ improvementsResponse.textContent =
 
     return reviewPanel;
 }
-
 /*
  * Connect the Review Responses button.
  */
