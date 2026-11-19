@@ -1,17 +1,59 @@
+```javascript
+/*
+ * PROJECT L.A.K.A.S.
+ * F1 Evaluation Questionnaire
+ * Bilingual statements and collapsible feedback drawer
+ */
 
 const F1_ITEMS = [
-    "The sketch shows a connection with nipa.",
-    "The cultural presentation seems respectful to me.",
-    "The name or logo is easy to identify.",
-    "The text shown is readable.",
-    "The colours and lettering work well together.",
-    "The information identifies the intended product as Laksoy.",
-    "The intended package shape is clear.",
-    "The layout of the package parts is easy to understand.",
-    "The intended opening or access is clear in the drawing.",
-    "The planned label placement is clear.",
-    "The drawing is clear enough for me to judge the visible design.",
-    "The visible design elements look consistent with one another."
+    {
+        en: "The sketch shows a connection with nipa.",
+        tl: "Ipinapakita ng guhit ang kaugnayan nito sa nipa."
+    },
+    {
+        en: "The cultural presentation seems respectful to me.",
+        tl: "Sa aking palagay, magalang ang pagkakalahad ng kultura."
+    },
+    {
+        en: "The name or logo is easy to identify.",
+        tl: "Madaling makilala ang pangalan o logo."
+    },
+    {
+        en: "The text shown is readable.",
+        tl: "Madaling basahin ang tekstong ipinakita."
+    },
+    {
+        en: "The colours and lettering work well together.",
+        tl: "Maganda ang pagkakatugma ng mga kulay at estilo ng letra."
+    },
+    {
+        en: "The information identifies the intended product as Laksoy.",
+        tl: "Ipinakikilala ng impormasyon ang produktong Laksoy."
+    },
+    {
+        en: "The intended package shape is clear.",
+        tl: "Malinaw ang nilalayong hugis ng pakete."
+    },
+    {
+        en: "The layout of the package parts is easy to understand.",
+        tl: "Madaling maunawaan ang pagkakaayos ng mga bahagi ng pakete."
+    },
+    {
+        en: "The intended opening or access is clear in the drawing.",
+        tl: "Malinaw sa guhit kung paano bubuksan o maa-access ang pakete."
+    },
+    {
+        en: "The planned label placement is clear.",
+        tl: "Malinaw kung saan ilalagay ang etiketa."
+    },
+    {
+        en: "The drawing is clear enough for me to judge the visible design.",
+        tl: "Sapat ang linaw ng guhit upang masuri ko ang nakikitang disenyo."
+    },
+    {
+        en: "The visible design elements look consistent with one another.",
+        tl: "Magkakatugma ang mga nakikitang elemento ng disenyo."
+    }
 ];
 
 const F1_SCALE = [
@@ -23,7 +65,66 @@ const F1_SCALE = [
     { value: "CJ", label: "CJ - Cannot judge" }
 ];
 
-// Draft storage is limited to the current browser tab session.
+/*
+ * Feedback choices.
+ * The IDs are stable internal values.
+ * English labels are used in the submission record.
+ */
+
+const F1_STRENGTH_OPTIONS = [
+    {
+        value: "appearance",
+        en: "Overall visual appearance",
+        tl: "Kabuuang hitsura"
+    },
+    {
+        value: "colours",
+        en: "Colour combination",
+        tl: "Kombinasyon ng mga kulay"
+    },
+    {
+        value: "typography",
+        en: "Typography and lettering",
+        tl: "Tipograpiya at estilo ng letra"
+    },
+    {
+        value: "logo",
+        en: "Logo and brand identity",
+        tl: "Logo at pagkakakilanlan ng tatak"
+    },
+    {
+        value: "culture",
+        en: "Filipino cultural elements and motifs",
+        tl: "Mga elementong pangkultura at disenyong Pilipino"
+    },
+    {
+        value: "nipa",
+        en: "Connection to nipa and Laksoy",
+        tl: "Kaugnayan sa nipa at Laksoy"
+    },
+    {
+        value: "shape",
+        en: "Packaging shape and structure",
+        tl: "Hugis at estruktura ng pakete"
+    },
+    {
+        value: "layout",
+        en: "Layout and arrangement of design elements",
+        tl: "Layout at pagkakaayos ng mga elemento ng disenyo"
+    },
+    {
+        value: "readability",
+        en: "Readability of text and product information",
+        tl: "Pagiging madaling basahin ng teksto at impormasyon ng produkto"
+    }
+];
+
+const F1_OTHER_VALUE = "other";
+
+/*
+ * Draft storage is limited to the current browser tab session.
+ */
+
 const F1_STORAGE_KEY =
     "project_lakas_f1_session_draft_v2";
 
@@ -71,11 +172,13 @@ function loadF1Draft() {
 // Working copy of the responses.
 let f1Draft = loadF1Draft();
 
-// Track which designs have been viewed during this session.
+/*
+ * Track which designs have been viewed during this session.
+ */
+
 const F1_VISITED_KEY =
     "project_lakas_f1_visited_v1";
 
-// Load previously viewed designs.
 function loadF1VisitedDesigns() {
     try {
         const saved = JSON.parse(
@@ -95,10 +198,11 @@ function loadF1VisitedDesigns() {
     }
 }
 
-// Working list of viewed designs.
 let f1VisitedDesigns = loadF1VisitedDesigns();
 
-// Update the final submission section.
+/*
+ * Update the final submission section.
+ */
 
 function updateF1SubmissionStatus() {
     const section =
@@ -181,7 +285,11 @@ function saveF1DraftToStorage() {
     }
 }
 
-// Update the progress indicator.
+/*
+ * Update questionnaire progress.
+ * Unanswered statements remain permitted.
+ */
+
 function updateF1Progress(root) {
     if (!root) return;
 
@@ -200,6 +308,9 @@ function updateF1Progress(root) {
     const progressText =
         root.querySelector("#progressText");
 
+    const progressTrack =
+        root.querySelector("#progressTrack");
+
     if (progressFill) {
         progressFill.style.width =
             (answered / F1_ITEMS.length * 100) + "%";
@@ -209,9 +320,80 @@ function updateF1Progress(root) {
         progressText.textContent =
             `${answered} of ${F1_ITEMS.length} answered`;
     }
+
+    if (progressTrack) {
+        progressTrack.setAttribute(
+            "aria-valuenow",
+            String(answered)
+        );
+    }
 }
 
-// Save the currently displayed design.
+/*
+ * Build a readable value for the existing worksWell field.
+ * This preserves the existing submission field and schema.
+ */
+
+function createWorksWellText(selections, otherText) {
+    const selectedLabels = F1_STRENGTH_OPTIONS
+        .filter(option => selections.includes(option.value))
+        .map(option => option.en);
+
+    if (
+        selections.includes(F1_OTHER_VALUE) &&
+        otherText.trim()
+    ) {
+        selectedLabels.push(
+            "Others: " + otherText.trim()
+        );
+    }
+
+    return selectedLabels.join("; ");
+}
+
+/*
+ * Update the drawer counter and the conditional Others field.
+ */
+
+function updateWorksWellDrawer(root) {
+    if (!root) return;
+
+    const selected = Array.from(
+        root.querySelectorAll(
+            'input[name="worksWellOption"]:checked'
+        )
+    );
+
+    const counter =
+        root.querySelector("#worksWellCount");
+
+    const otherCheckbox =
+        root.querySelector(
+            'input[name="worksWellOption"][value="other"]'
+        );
+
+    const otherResponse =
+        root.querySelector("#otherResponse");
+
+    if (counter) {
+        const count = selected.length;
+
+        counter.textContent =
+            count === 1
+                ? "1 selected"
+                : `${count} selected`;
+    }
+
+    if (otherResponse) {
+        otherResponse.hidden =
+            !(otherCheckbox && otherCheckbox.checked);
+    }
+}
+
+/*
+ * Save the currently displayed design.
+ */
+
 function saveCurrentF1Answers(sketchCode, position) {
     const root =
         document.getElementById("questionnaire");
@@ -232,8 +414,24 @@ function saveCurrentF1Answers(sketchCode, position) {
             selectedAnswer ? selectedAnswer.value : "";
     });
 
+    const selectedStrengths = Array.from(
+        root.querySelectorAll(
+            'input[name="worksWellOption"]:checked'
+        )
+    ).map(input => input.value);
+
+    const otherText =
+        root.querySelector("#worksWellOther")?.value || "";
+
+    designAnswers.worksWellSelections =
+        selectedStrengths;
+
+    designAnswers.worksWellOther =
+        otherText;
+
+    // Existing spreadsheet field.
     designAnswers.worksWell =
-        root.querySelector("#worksWell")?.value || "";
+        createWorksWellText(selectedStrengths, otherText);
 
     designAnswers.improvements =
         root.querySelector("#improvements")?.value || "";
@@ -253,10 +451,10 @@ function saveCurrentF1Answers(sketchCode, position) {
             : "Unable to save this draft. Your current answers remain available while this page stays open.";
     }
 
-        updateF1Progress(root);
+    updateF1Progress(root);
+    updateWorksWellDrawer(root);
 
-    // If the Response Review is open, refresh it
-    // so it shows the newest answers.
+    // Refresh an open response review.
     const openReviewPanel =
         document.getElementById("responseReviewPanel");
 
@@ -265,7 +463,10 @@ function saveCurrentF1Answers(sketchCode, position) {
     }
 }
 
-// Generate the questionnaire.
+/*
+ * Generate the questionnaire.
+ */
+
 function renderF1Questionnaire(sketchCode, position) {
     const root =
         document.getElementById("questionnaire");
@@ -276,7 +477,9 @@ function renderF1Questionnaire(sketchCode, position) {
         EVALUATION_CONFIG.materials[sketchCode];
 
     if (!material) return;
-markF1DesignVisited(sketchCode);
+
+    markF1DesignVisited(sketchCode);
+
     const savedDesignAnswers =
         f1Draft.designs[sketchCode] || {};
 
@@ -288,6 +491,12 @@ markF1DesignVisited(sketchCode);
                 Examine the displayed packaging sketch and
                 provide your assessment using the rating
                 scale below.
+            </p>
+
+            <p>
+                Suriin ang ipinakitang guhit ng disenyo ng pakete
+                at ibigay ang iyong pagtataya gamit ang
+                iskala ng rating sa ibaba.
             </p>
         </div>
 
@@ -331,6 +540,10 @@ markF1DesignVisited(sketchCode);
             Select one response for each statement.
             You may leave an item unanswered or select
             CJ when you cannot judge.
+            <br>
+            Pumili ng isang sagot para sa bawat pahayag.
+            Maaari mong laktawan ang isang pahayag o piliin
+            ang CJ kung hindi mo ito kayang tasahin.
         </p>
 
         <div id="f1Questions"></div>
@@ -342,24 +555,74 @@ markF1DesignVisited(sketchCode);
         <p class="section-description">
             Share your observations and suggestions
             about the displayed design.
+            <br>
+            Ibahagi ang iyong mga obserbasyon at mungkahi
+            tungkol sa ipinakitang disenyo.
         </p>
 
-        <div class="comment-card">
-            <label for="worksWell">
-                What Works Well?
-            </label>
+        <details class="feedback-drawer" id="worksWellDrawer">
+            <summary>
+                <span class="drawer-title">
+                    <strong>What Works Well?</strong>
+                    <span>Ano ang maganda sa disenyong ito?</span>
+                </span>
 
-            <textarea
-                id="worksWell"
-                name="worksWell"
-                placeholder="Describe the strengths or features you appreciate in this design."
-            ></textarea>
-        </div>
+                <span class="drawer-controls">
+                    <span
+                        class="selection-count"
+                        id="worksWellCount"
+                        aria-live="polite"
+                    >0 selected</span>
+
+                    <span class="drawer-arrow" aria-hidden="true">
+                        ▾
+                    </span>
+                </span>
+            </summary>
+
+            <div class="drawer-content">
+                <p class="drawer-instruction">
+                    Select all that apply.
+                    <br>
+                    Piliin ang lahat ng naaangkop.
+                </p>
+
+                <div
+                    class="strength-options"
+                    id="strengthOptions"
+                ></div>
+
+                <div
+                    class="other-response"
+                    id="otherResponse"
+                    hidden
+                >
+                    <label for="worksWellOther">
+                        Please specify:
+                        <span class="option-tagalog">
+                            Pakitukoy:
+                        </span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="worksWellOther"
+                        name="worksWellOther"
+                        maxlength="500"
+                        placeholder="Enter your answer here..."
+                    >
+                </div>
+            </div>
+        </details>
 
         <div class="comment-card">
             <label for="improvements">
                 Suggested Improvements
             </label>
+
+            <span class="tagalog-label">
+                Mga mungkahing pagpapabuti
+            </span>
 
             <textarea
                 id="improvements"
@@ -381,7 +644,7 @@ markF1DesignVisited(sketchCode);
     const questions =
         root.querySelector("#f1Questions");
 
-    // Generate the 12 evaluation statements.
+    // Generate the 12 bilingual evaluation statements.
     F1_ITEMS.forEach((item, index) => {
         const itemNumber =
             String(index + 1).padStart(2, "0");
@@ -400,10 +663,21 @@ markF1DesignVisited(sketchCode);
         number.className = "question-number";
         number.textContent = itemNumber + ".";
 
+        const english =
+            document.createElement("span");
+
+        english.className = "question-english";
+        english.textContent = item.en;
+
+        const tagalog =
+            document.createElement("span");
+
+        tagalog.className = "question-tagalog";
+        tagalog.textContent = item.tl;
+
         legend.appendChild(number);
-        legend.appendChild(
-            document.createTextNode(" " + item)
-        );
+        legend.appendChild(english);
+        legend.appendChild(tagalog);
 
         section.appendChild(legend);
 
@@ -438,7 +712,81 @@ markF1DesignVisited(sketchCode);
         questions.appendChild(section);
     });
 
-    // Restore saved answers for this design.
+    // Generate the selectable feedback checklist.
+    const strengthOptions =
+        root.querySelector("#strengthOptions");
+
+    F1_STRENGTH_OPTIONS.forEach(option => {
+        const label =
+            document.createElement("label");
+
+        label.className = "strength-option";
+
+        const checkbox =
+            document.createElement("input");
+
+        checkbox.type = "checkbox";
+        checkbox.name = "worksWellOption";
+        checkbox.value = option.value;
+
+        const text =
+            document.createElement("span");
+
+        text.appendChild(
+            document.createTextNode(option.en)
+        );
+
+        const tagalog =
+            document.createElement("span");
+
+        tagalog.className = "option-tagalog";
+        tagalog.textContent = option.tl;
+
+        text.appendChild(tagalog);
+
+        label.appendChild(checkbox);
+        label.appendChild(text);
+
+        strengthOptions.appendChild(label);
+    });
+
+    // Add the Others checkbox.
+    const otherLabel =
+        document.createElement("label");
+
+    otherLabel.className = "strength-option";
+
+    const otherCheckbox =
+        document.createElement("input");
+
+    otherCheckbox.type = "checkbox";
+    otherCheckbox.name = "worksWellOption";
+    otherCheckbox.value = F1_OTHER_VALUE;
+
+    const otherLabelText =
+        document.createElement("span");
+
+    otherLabelText.appendChild(
+        document.createTextNode("Others")
+    );
+
+    const otherTagalog =
+        document.createElement("span");
+
+    otherTagalog.className = "option-tagalog";
+    otherTagalog.textContent = "Iba pa";
+
+    otherLabelText.appendChild(otherTagalog);
+
+    otherLabel.appendChild(otherCheckbox);
+    otherLabel.appendChild(otherLabelText);
+
+    strengthOptions.appendChild(otherLabel);
+
+    /*
+     * Restore saved rating answers.
+     */
+
     F1_ITEMS.forEach((item, index) => {
         const itemNumber =
             String(index + 1).padStart(2, "0");
@@ -459,15 +807,58 @@ markF1DesignVisited(sketchCode);
         });
     });
 
-    // Restore written comments.
-    root.querySelector("#worksWell").value =
-        savedDesignAnswers.worksWell || "";
+    /*
+     * Restore feedback selections.
+     *
+     * If an older draft only has the original free-text
+     * worksWell value, preserve it under Others.
+     */
 
+    let savedSelections = [];
+
+    if (
+        Array.isArray(savedDesignAnswers.worksWellSelections)
+    ) {
+        savedSelections =
+            savedDesignAnswers.worksWellSelections.filter(value =>
+                F1_STRENGTH_OPTIONS.some(
+                    option => option.value === value
+                ) || value === F1_OTHER_VALUE
+            );
+
+    } else if (
+        typeof savedDesignAnswers.worksWell === "string" &&
+        savedDesignAnswers.worksWell.trim()
+    ) {
+        savedSelections = [F1_OTHER_VALUE];
+    }
+
+    root.querySelectorAll(
+        'input[name="worksWellOption"]'
+    ).forEach(checkbox => {
+        checkbox.checked =
+            savedSelections.includes(checkbox.value);
+    });
+
+    const savedOtherText =
+        typeof savedDesignAnswers.worksWellOther === "string"
+            ? savedDesignAnswers.worksWellOther
+            : (
+                savedSelections.includes(F1_OTHER_VALUE)
+                    ? savedDesignAnswers.worksWell || ""
+                    : ""
+            );
+
+    root.querySelector("#worksWellOther").value =
+        savedOtherText;
+
+    // Restore the improvements response.
     root.querySelector("#improvements").value =
         savedDesignAnswers.improvements || "";
 
-    // Restore the progress indicator.
+    // Restore the progress indicator and feedback counter.
     updateF1Progress(root);
+    updateWorksWellDrawer(root);
 
     // Display the current save state.
     const saveStatus =
@@ -478,28 +869,41 @@ markF1DesignVisited(sketchCode);
             "Previously saved answers restored for this browser tab session.";
     }
 
+    /*
+     * Save written responses as participants type.
+     */
 
-    // Save written comments as participants type.
     root.oninput = function (event) {
         if (
-            event.target.matches("#worksWell, #improvements")
+            event.target.matches(
+                "#improvements, #worksWellOther"
+            )
         ) {
             saveCurrentF1Answers(sketchCode, position);
         }
     };
 
-    // Save selected radio answers when changed.
+    /*
+     * Save selected rating answers and checklist choices.
+     */
+
     root.onchange = function (event) {
         if (
-            event.target.matches('input[type="radio"]')
+            event.target.matches('input[type="radio"]') ||
+            event.target.matches(
+                'input[name="worksWellOption"]'
+            )
         ) {
+            updateWorksWellDrawer(root);
             saveCurrentF1Answers(sketchCode, position);
         }
     };
 }
 
+/*
+ * Generate or retrieve the anonymous retry token.
+ */
 
-// Generate or retrieve the anonymous retry token.
 function getF1RetryToken() {
     const key = "project_lakas_f1_retry_token_v1";
 
@@ -540,8 +944,13 @@ function getF1RetryToken() {
     return token;
 }
 
+/*
+ * Prepare all five designs for submission.
+ *
+ * The existing worksWell and improvements field names
+ * are retained for spreadsheet compatibility.
+ */
 
-// Prepare all five designs for submission.
 function createF1SubmissionPayload() {
     const designs = {};
 
@@ -582,7 +991,10 @@ function createF1SubmissionPayload() {
     };
 }
 
-// Display a visual review of all five design responses.
+/*
+ * Display a visual review of all five design responses.
+ */
+
 function showF1ResponseReview() {
     const submissionSection =
         document.getElementById("submissionSection");
@@ -600,7 +1012,7 @@ function showF1ResponseReview() {
         submissionSection.appendChild(reviewPanel);
     }
 
-    // Remember which design card is open, so it can be reopened.
+    // Remember which design card is open.
     const previouslyOpenCard =
         reviewPanel.querySelector("details[open]");
 
@@ -619,7 +1031,7 @@ function showF1ResponseReview() {
             answers: f1Draft.designs[code] || {}
         }));
 
-    // Calculate overall response totals.
+    // Calculate response totals.
     let answeredCount = 0;
     let cannotJudgeCount = 0;
     let unansweredCount = 0;
@@ -634,7 +1046,9 @@ function showF1ResponseReview() {
 
             if (value === "CJ") {
                 cannotJudgeCount++;
-            } else if (["1", "2", "3", "4", "5"].includes(value)) {
+            } else if (
+                ["1", "2", "3", "4", "5"].includes(value)
+            ) {
                 answeredCount++;
             } else {
                 unansweredCount++;
@@ -651,6 +1065,14 @@ function showF1ResponseReview() {
     description.textContent =
         "Check your answers for each design. Select a design card to expand or collapse its responses.";
     reviewPanel.appendChild(description);
+
+    const tagalogDescription =
+        document.createElement("p");
+
+    tagalogDescription.textContent =
+        "Suriin ang iyong mga sagot para sa bawat disenyo. Piliin ang isang card upang makita o itago ang mga sagot nito.";
+
+    reviewPanel.appendChild(tagalogDescription);
 
     // Overall response summary.
     const summary = document.createElement("div");
@@ -702,7 +1124,7 @@ function showF1ResponseReview() {
     // Create five collapsible design cards.
     let openCard = null;
 
-        designs.forEach(({ code, position, answers }) => {
+    designs.forEach(({ code, position, answers }) => {
         const material =
             EVALUATION_CONFIG.materials[code];
 
@@ -768,9 +1190,10 @@ function showF1ResponseReview() {
 
             question.style.flex = "1";
             question.style.fontSize = "13px";
+            question.style.whiteSpace = "pre-line";
 
             question.textContent =
-                `${itemNumber}. ${item}`;
+                `${itemNumber}. ${item.en}\n${item.tl}`;
 
             const answerBadge =
                 document.createElement("span");
@@ -785,7 +1208,9 @@ function showF1ResponseReview() {
                 answerBadge.textContent = "CJ";
                 answerBadge.style.background = "#fff1cc";
                 answerBadge.style.color = "#805500";
-            } else if (["1", "2", "3", "4", "5"].includes(value)) {
+            } else if (
+                ["1", "2", "3", "4", "5"].includes(value)
+            ) {
                 answerBadge.textContent = value;
                 answerBadge.style.background = "#e5f0e8";
                 answerBadge.style.color = "#245b35";
@@ -810,39 +1235,51 @@ function showF1ResponseReview() {
 
         card.appendChild(feedbackHeading);
 
-        const feedbackItems = [
-            {
-                label: "What Works Well?",
-                value: answers.worksWell
-            },
-            {
-                label: "Suggested Improvements",
-                value: answers.improvements
-            }
-        ];
+        const worksWellHeading =
+            document.createElement("strong");
 
-        feedbackItems.forEach(item => {
-            const feedbackBox =
-                document.createElement("div");
+        worksWellHeading.textContent =
+            "What Works Well? / Ano ang maganda sa disenyo?";
 
-            feedbackBox.style.background = "#f5f5f5";
-            feedbackBox.style.padding = "12px";
-            feedbackBox.style.borderRadius = "6px";
-            feedbackBox.style.marginBottom = "10px";
+        const worksWellResponse =
+            document.createElement("p");
 
-            const label = document.createElement("strong");
-            label.textContent = item.label;
+        worksWellResponse.textContent =
+            answers.worksWell || "No selection provided.";
 
-            const response = document.createElement("p");
-            response.textContent =
-                item.value || "No comment provided.";
+        worksWellResponse.style.marginBottom = "14px";
+        worksWellResponse.style.fontSize = "13px";
 
-            response.style.marginBottom = "0";
-            response.style.fontSize = "13px";
+        const improvementsHeading =
+            document.createElement("strong");
 
-            feedbackBox.append(label, response);
-            card.appendChild(feedbackBox);
-        });
+        improvementsHeading.textContent =
+            "Suggested Improvements / Mga mungkahing pagpapabuti";
+
+        const improvementsResponse =
+            document.createElement("p");
+
+        improvementsResponse.textContent =
+            answers.improvements || "No suggestion provided.";
+
+        improvementsResponse.style.marginBottom = "0";
+        improvementsResponse.style.fontSize = "13px";
+
+        const feedbackBox =
+            document.createElement("div");
+
+        feedbackBox.style.background = "#f5f5f5";
+        feedbackBox.style.padding = "12px";
+        feedbackBox.style.borderRadius = "6px";
+
+        feedbackBox.append(
+            worksWellHeading,
+            worksWellResponse,
+            improvementsHeading,
+            improvementsResponse
+        );
+
+        card.appendChild(feedbackBox);
 
         reviewPanel.appendChild(card);
 
@@ -856,10 +1293,12 @@ function showF1ResponseReview() {
     return reviewPanel;
 }
 
-// Connect the Review Responses button.
+/*
+ * Connect the Review Responses button.
+ */
+
 const reviewResponsesButton =
     document.getElementById("reviewResponsesButton");
-
 
 if (reviewResponsesButton) {
     reviewResponsesButton.addEventListener("click", () => {
@@ -893,6 +1332,8 @@ if (reviewResponsesButton) {
 /*
  * PROJECT L.A.K.A.S.
  * Apps Script Submission Bridge
+ *
+ * Existing submission bridge retained.
  */
 
 (function setupF1Bridge() {
@@ -912,27 +1353,25 @@ if (reviewResponsesButton) {
     const submissionStatus =
         document.getElementById("submissionStatus");
 
-if (!bridgeFrame || !submitButton || !submissionStatus) {
-    console.error(
-        "PROJECT LAKAS: Required submission elements were not found."
-    );
-    return;
-}
+    if (!bridgeFrame || !submitButton || !submissionStatus) {
+        console.error(
+            "PROJECT LAKAS: Required submission elements were not found."
+        );
+        return;
+    }
 
-bridgeFrame.name = "f1SubmissionBridge";
+    bridgeFrame.name = "f1SubmissionBridge";
 
+    bridgeFrame.addEventListener("error", function () {
+        bridgeFrame.dataset.loadError = "true";
 
+        console.error(
+            "PROJECT LAKAS: Submission iframe failed to load."
+        );
+    });
 
-bridgeFrame.addEventListener("error", function () {
-    bridgeFrame.dataset.loadError = "true";
-
-    console.error(
-        "PROJECT LAKAS: Submission iframe failed to load."
-    );
-});
-
-let pendingRequestId = null;
-let submissionTimeout = null;
+    let pendingRequestId = null;
+    let submissionTimeout = null;
 
     // Generate a unique ID for each submission attempt.
     function generateRequestId() {
@@ -968,21 +1407,21 @@ let submissionTimeout = null;
         ].join("-");
     }
 
-// Check whether a message came from an accepted Apps Script origin.
-function isTrustedAppsScriptOrigin(origin) {
-    try {
-        const hostname = new URL(origin).hostname;
+    // Check whether a message came from an accepted Apps Script origin.
+    function isTrustedAppsScriptOrigin(origin) {
+        try {
+            const hostname = new URL(origin).hostname;
 
-        return (
-            hostname === "script.google.com" ||
-            hostname.endsWith(".script.googleusercontent.com") ||
-            hostname.endsWith("-script.googleusercontent.com")
-        );
+            return (
+                hostname === "script.google.com" ||
+                hostname.endsWith(".script.googleusercontent.com") ||
+                hostname.endsWith("-script.googleusercontent.com")
+            );
 
-    } catch (error) {
-        return false;
+        } catch (error) {
+            return false;
+        }
     }
-} 
 
     // Display the submission result.
     function displaySubmissionResult(result) {
@@ -1090,13 +1529,12 @@ function isTrustedAppsScriptOrigin(origin) {
             requestIdInput.name = "requestId";
             requestIdInput.value = requestId;
 
-form.appendChild(payloadInput);
-form.appendChild(requestIdInput);
+            form.appendChild(payloadInput);
+            form.appendChild(requestIdInput);
 
+            document.body.appendChild(form);
 
-document.body.appendChild(form);
-
-pendingRequestId = requestId;
+            pendingRequestId = requestId;
 
             submitButton.disabled = true;
 
@@ -1120,8 +1558,7 @@ pendingRequestId = requestId;
 
             }, 30000);
 
-form.submit();
-
+            form.submit();
 
         } catch (error) {
 
@@ -1160,3 +1597,4 @@ form.submit();
     );
 
 })();
+```
