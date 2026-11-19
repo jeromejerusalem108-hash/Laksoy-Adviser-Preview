@@ -976,20 +976,21 @@ let submissionTimeout = null;
         ].join("-");
     }
 
-    // Check whether a message came from an accepted Apps Script origin.
-    function isTrustedAppsScriptOrigin(origin) {
-        try {
-            const hostname = new URL(origin).hostname;
+// Check whether a message came from an accepted Apps Script origin.
+function isTrustedAppsScriptOrigin(origin) {
+    try {
+        const hostname = new URL(origin).hostname;
 
-            return (
-                hostname === "script.google.com" ||
-                hostname.endsWith(".script.googleusercontent.com")
-            );
+        return (
+            hostname === "script.google.com" ||
+            hostname.endsWith(".script.googleusercontent.com") ||
+            hostname.endsWith("-script.googleusercontent.com")
+        );
 
-        } catch (error) {
-            return false;
-        }
+    } catch (error) {
+        return false;
     }
+}
 
     // Display the submission result.
     function displaySubmissionResult(result) {
