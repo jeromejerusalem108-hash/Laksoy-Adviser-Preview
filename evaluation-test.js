@@ -990,8 +990,7 @@ function isTrustedAppsScriptOrigin(origin) {
     } catch (error) {
         return false;
     }
-}
-    
+} 
 
     // Display the submission result.
     function displaySubmissionResult(result) {
