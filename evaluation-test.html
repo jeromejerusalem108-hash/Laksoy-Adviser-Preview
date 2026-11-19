@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,10 +8,10 @@
     <title>PROJECT L.A.K.A.S. | Evaluation</title>
 
     <!-- Consent access protection -->
-<script>
-    // TEMPORARY TESTING COPY ONLY
-    // Consent protection remains unchanged in evaluation.html.
-</script>
+    <script>
+        // TEMPORARY TESTING COPY ONLY.
+        // Consent protection remains unchanged in evaluation.html.
+    </script>
 
     <style>
         * {
@@ -189,6 +189,18 @@
             color: #356347;
         }
 
+        .question-english,
+        .question-tagalog {
+            display: block;
+        }
+
+        .question-tagalog {
+            margin-top: 4px;
+            color: #65766a;
+            font-weight: normal;
+            font-style: italic;
+        }
+
         /* Rating choices */
 
         .answer-options {
@@ -225,7 +237,184 @@
             flex-shrink: 0;
         }
 
-        /* Comments */
+        /* Written feedback */
+
+        .feedback-intro {
+            margin: 0 0 13px;
+            color: #68766b;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .feedback-drawer {
+            margin: 0 0 15px;
+            background: white;
+            border: 1px solid #dce4da;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .feedback-drawer summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 15px 16px;
+            background: #eaf0e8;
+            color: #183b2b;
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .feedback-drawer summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .feedback-drawer summary:hover {
+            background: #e1ebdf;
+        }
+
+        .feedback-drawer summary:focus-visible {
+            outline: 3px solid #8eae92;
+            outline-offset: -3px;
+        }
+
+        .drawer-title {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+        }
+
+        .drawer-title strong {
+            font-family: Georgia, serif;
+            font-size: 17px;
+        }
+
+        .drawer-title span {
+            color: #5c7162;
+            font-size: 12px;
+            font-style: italic;
+        }
+
+        .drawer-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .selection-count {
+            padding: 6px 9px;
+            border-radius: 20px;
+            background: #d7e5d5;
+            color: #244b35;
+            font-size: 11px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .drawer-arrow {
+            color: #244b35;
+            font-size: 19px;
+            font-weight: bold;
+            transition: transform 0.2s ease;
+        }
+
+        .feedback-drawer[open] .drawer-arrow {
+            transform: rotate(180deg);
+        }
+
+        .drawer-content {
+            padding: 14px;
+            border-top: 1px solid #e1e7df;
+        }
+
+        .drawer-instruction {
+            margin: 0 0 12px;
+            color: #68766b;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .strength-options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+
+        .strength-option {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px;
+            background: #fafbf8;
+            border: 1px solid #e2e6df;
+            border-radius: 6px;
+            cursor: pointer;
+            color: #34483a;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .strength-option:has(input:checked) {
+            background: #eaf2e9;
+            border-color: #6c9774;
+        }
+
+        .strength-option input {
+            width: 16px;
+            height: 16px;
+            margin: 1px 0 0;
+            flex-shrink: 0;
+            accent-color: #356347;
+        }
+
+        .strength-option span {
+            display: block;
+        }
+
+        .strength-option .option-tagalog {
+            display: block;
+            margin-top: 3px;
+            color: #68766b;
+            font-size: 12px;
+            font-style: italic;
+        }
+
+        .other-response {
+            margin: 9px 0 0 26px;
+        }
+
+        .other-response[hidden] {
+            display: none;
+        }
+
+        .other-response label {
+            display: block;
+            margin-bottom: 6px;
+            color: #45564a;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .other-response input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d6ddd3;
+            border-radius: 5px;
+            background: #fafbf8;
+            color: #263b2d;
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+        }
+
+        .other-response input:focus {
+            outline: 2px solid #b8d0bd;
+            border-color: #356347;
+        }
+
+        /* Suggested improvements */
 
         .comment-card {
             margin-bottom: 15px;
@@ -237,10 +426,18 @@
 
         .comment-card label {
             display: block;
-            margin-bottom: 9px;
+            margin-bottom: 5px;
             color: #263b2d;
             font-size: 14px;
             font-weight: bold;
+        }
+
+        .comment-card .tagalog-label {
+            display: block;
+            margin-bottom: 10px;
+            color: #68766b;
+            font-size: 12px;
+            font-style: italic;
         }
 
         .comment-card textarea {
@@ -330,7 +527,6 @@
         }
 
         @media (max-width: 760px) {
-
             .topbar {
                 height: 52px;
                 padding: 0 11px;
@@ -405,6 +601,19 @@
 
             .evaluation-panel {
                 padding: 16px;
+            }
+
+            .feedback-drawer summary {
+                padding: 13px 11px;
+            }
+
+            .drawer-title strong {
+                font-size: 15px;
+            }
+
+            .selection-count {
+                font-size: 10px;
+                padding: 5px 7px;
             }
         }
     </style>
@@ -482,22 +691,21 @@
             </button>
         </div>
 
-<section class="model-viewer">
-    <iframe
-        id="modelFrame"
-        title="Laksoy 3D presentation">
-    </iframe>
+        <section class="model-viewer">
+            <iframe
+                id="modelFrame"
+                title="Laksoy 3D presentation">
+            </iframe>
 
-<!-- Project L.A.K.A.S. Apps Script submission bridge -->
-<iframe
-    id="f1SubmissionBridge"
-    name="f1SubmissionBridge"
-    title="F1 Submission Bridge"
-    aria-hidden="true"
-    style="display: none;"
-></iframe>
-</section>
-
+            <!-- Project L.A.K.A.S. Apps Script submission bridge -->
+            <iframe
+                id="f1SubmissionBridge"
+                name="f1SubmissionBridge"
+                title="F1 Submission Bridge"
+                aria-hidden="true"
+                style="display: none;"
+            ></iframe>
+        </section>
 
     </main>
 
@@ -637,3 +845,4 @@
 
 </body>
 </html>
+```
