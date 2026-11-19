@@ -172,6 +172,9 @@ function loadF1Draft() {
 // Working copy of the responses.
 let f1Draft = loadF1Draft();
 
+// True while a participant is editing after opening a review item.
+let f1ReviewNavigationActive = false;
+
 /*
  * Track which designs have been viewed during this session.
  */
@@ -641,6 +644,48 @@ function renderF1Questionnaire(sketchCode, position) {
         </div>
     `;
 
+    // Keep a direct route back to the review when editing from a review link.
+    if (f1ReviewNavigationActive) {
+        const returnButton = document.createElement("button");
+
+        returnButton.type = "button";
+        returnButton.id = "returnToResponseReviewButton";
+        returnButton.textContent = "Return to Response Review";
+        returnButton.style.display = "block";
+        returnButton.style.position = "sticky";
+        returnButton.style.top = "0";
+        returnButton.style.zIndex = "10";
+        returnButton.style.margin = "0 0 18px";
+        returnButton.style.padding = "10px 14px";
+        returnButton.style.border = "1px solid #356347";
+        returnButton.style.borderRadius = "6px";
+        returnButton.style.background = "#e9efe8";
+        returnButton.style.color = "#183b2b";
+        returnButton.style.fontWeight = "600";
+        returnButton.style.cursor = "pointer";
+
+        returnButton.addEventListener("click", () => {
+            f1ReviewNavigationActive = false;
+            returnButton.remove();
+
+            const updatedReview = showF1ResponseReview();
+
+            if (updatedReview) {
+                if (reviewResponsesButton) {
+                    reviewResponsesButton.textContent =
+                        "Hide Response Review";
+                }
+
+                updatedReview.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+            }
+        });
+
+        root.insertBefore(returnButton, root.firstChild);
+    }
+
     const questions =
         root.querySelector("#f1Questions");
 
@@ -653,6 +698,7 @@ function renderF1Questionnaire(sketchCode, position) {
             document.createElement("fieldset");
 
         section.className = "question-card";
+        section.tabIndex = -1;
 
         const legend =
             document.createElement("legend");
@@ -992,6 +1038,56 @@ function createF1SubmissionPayload() {
 }
 
 /*
+ * Open a specific design and questionnaire item from the response review.
+ * Answers are saved as participants change them; rendering the selected design
+ * restores its saved values before the participant edits the chosen item.
+ */
+function navigateToF1Question(sketchCode, questionIndex) {
+    const loadDesign = window.loadModel;
+
+    if (typeof loadDesign !== "function") {
+        console.error(
+            "PROJECT LAKAS: The prototype navigation function is unavailable."
+        );
+        return;
+    }
+
+    f1ReviewNavigationActive = true;
+
+    const reviewPanel =
+        document.getElementById("responseReviewPanel");
+
+    if (reviewPanel) {
+        reviewPanel.hidden = true;
+    }
+
+    if (reviewResponsesButton) {
+        reviewResponsesButton.textContent = "Review Responses";
+    }
+
+    loadDesign(sketchCode);
+
+    const questionnaire =
+        document.getElementById("questionnaire");
+
+    const questionCards =
+        questionnaire
+            ? questionnaire.querySelectorAll(".question-card")
+            : [];
+
+    const targetQuestion = questionCards[questionIndex];
+
+    if (targetQuestion) {
+        targetQuestion.focus({ preventScroll: true });
+
+        targetQuestion.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+    }
+}
+
+/*
  * Display a visual review of all five design responses.
  */
 
@@ -1062,14 +1158,14 @@ function showF1ResponseReview() {
 
     const description = document.createElement("p");
     description.textContent =
-        "Check your answers for each design. Select a design card to expand or collapse its responses.";
+        "Check your answers for each design. Select a question statement to open that exact question and edit your response. Select a design card to expand or collapse its responses.";
     reviewPanel.appendChild(description);
 
     const tagalogDescription =
         document.createElement("p");
 
     tagalogDescription.textContent =
-        "Suriin ang iyong mga sagot para sa bawat disenyo. Piliin ang isang card upang makita o itago ang mga sagot nito.";
+        "Suriin ang iyong mga sagot para sa bawat disenyo. Piliin ang pahayag ng tanong upang buksan ang mismong tanong at baguhin ang sagot. Piliin ang isang card upang makita o itago ang mga sagot nito.";
 
     reviewPanel.appendChild(tagalogDescription);
 
@@ -1176,14 +1272,36 @@ function showF1ResponseReview() {
             answerRow.style.borderBottom =
                 "1px solid #e5e5e5";
 
-            const question = document.createElement("span");
+            const question = document.createElement("button");
 
+            question.type = "button";
             question.style.flex = "1";
+            question.style.padding = "0";
+            question.style.border = "0";
+            question.style.background = "transparent";
+            question.style.color = "#245b35";
+            question.style.fontFamily = "Arial, sans-serif";
             question.style.fontSize = "13px";
+            question.style.lineHeight = "1.5";
+            question.style.textAlign = "left";
+            question.style.textDecoration = "underline";
+            question.style.textUnderlineOffset = "3px";
             question.style.whiteSpace = "pre-line";
+            question.style.cursor = "pointer";
 
             question.textContent =
                 `${itemNumber}. ${item.en}\n${item.tl}`;
+
+            question.setAttribute(
+                "aria-label",
+                `Edit response for ${material.name}, question ${itemNumber}: ${item.en}`
+            );
+
+            question.title = "Click to edit this response";
+
+            question.addEventListener("click", () => {
+                navigateToF1Question(code, index);
+            });
 
             const answerBadge =
                 document.createElement("span");
