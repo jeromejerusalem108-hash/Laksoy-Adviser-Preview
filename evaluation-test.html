@@ -775,6 +775,9 @@
             renderF1Questionnaire(code, position);
         }
 
+        // Allow response-review links in evaluation-test.js to use this same navigation.
+        window.loadModel = loadModel;
+
         designPicker.addEventListener("change", () => {
             loadModel(designPicker.value);
         });
