@@ -921,15 +921,7 @@ if (!bridgeFrame || !submitButton || !submissionStatus) {
 
 bridgeFrame.name = "f1SubmissionBridge";
 
-// TEMPORARY DIAGNOSTIC — iframe loading
-bridgeFrame.addEventListener("load", function () {
-    bridgeFrame.dataset.loadComplete = "true";
 
-    console.log(
-        "PROJECT LAKAS: Submission iframe loaded.",
-        bridgeFrame.src
-    );
-});
 
 bridgeFrame.addEventListener("error", function () {
     bridgeFrame.dataset.loadError = "true";
@@ -1130,16 +1122,7 @@ pendingRequestId = requestId;
 
 form.submit();
 
-// TEMPORARY DIAGNOSTIC:
-// Keep the submitted form in the DOM while testing.
-console.log(
-    "PROJECT LAKAS: Form submitted to hidden iframe.",
-    {
-        target: form.target,
-        iframeConnected: bridgeFrame.isConnected,
-        formConnected: form.isConnected
-    }
-);
+
         } catch (error) {
 
             if (submissionTimeout) {
