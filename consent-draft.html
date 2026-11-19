@@ -136,8 +136,18 @@
             }
         }
     </style>
-</head>
+    <script>
+    const AGE_ELIGIBILITY_KEY =
+        "project_lakas_age_eligible";
 
+    if (
+        sessionStorage.getItem(AGE_ELIGIBILITY_KEY) !== "true"
+    ) {
+        window.location.replace("eligibility-draft.html");
+    }
+</script>
+</head>
+    
 <body>
 
     <header>
@@ -243,75 +253,74 @@
         PROJECT L.A.K.A.S. Research Team
     </footer>
 
-    <script>
-        const CONSENT_KEY = "project_lakas_f1_consent_v1";
 
-        const continueButton =
-            document.getElementById("continueButton");
+<script>
+    const CONSENT_KEY =
+        "project_lakas_f1_consent_v1";
 
-        const consentStatus =
-            document.getElementById("consentStatus");
+    const continueButton =
+        document.getElementById("continueButton");
 
-        continueButton.addEventListener("click", function(event) {
+    const consentStatus =
+        document.getElementById("consentStatus");
 
-            event.preventDefault();
+    continueButton.addEventListener("click", function(event) {
 
-            const consentChoice =
-                document.querySelector(
-                    'input[name="consent"]:checked'
-                );
+        event.preventDefault();
 
-            const quotationChoice =
-                document.querySelector(
-                    'input[name="quotation"]:checked'
-                );
+        const consentChoice =
+            document.querySelector(
+                'input[name="consent"]:checked'
+            );
 
-            if (!consentChoice) {
-                consentStatus.textContent =
-                    "Please indicate whether you agree or decline participation.";
-                return;
-            }
+        const quotationChoice =
+            document.querySelector(
+                'input[name="quotation"]:checked'
+            );
 
-            if (consentChoice.value !== "agree") {
+        if (!consentChoice) {
+            consentStatus.textContent =
+                "Please indicate whether you agree or decline participation.";
+            return;
+        }
 
-                sessionStorage.removeItem(CONSENT_KEY);
+        if (consentChoice.value !== "agree") {
 
-                consentStatus.textContent =
-                    "You have declined participation. You cannot proceed to the evaluation.";
+            sessionStorage.removeItem(CONSENT_KEY);
 
-                return;
-            }
+            consentStatus.textContent =
+                "You have declined participation. You cannot proceed to the evaluation.";
 
-            const quotationPermission =
-                quotationChoice &&
-                quotationChoice.value === "permit"
-                    ? "permit"
-                    : "decline";
+            return;
+        }
 
-            const consentRecord = {
-                consent: "agree",
-                quotationPermission: quotationPermission
-            };
+        const quotationPermission =
+            quotationChoice &&
+            quotationChoice.value === "permit"
+                ? "permit"
+                : "decline";
 
-            try {
+        const consentRecord = {
+            consent: "agree",
+            quotationPermission: quotationPermission
+        };
 
-                sessionStorage.setItem(
-                    CONSENT_KEY,
-                    JSON.stringify(consentRecord)
-                );
+        try {
 
-                window.location.href =
-                    "f1-instructions-draft.html";
+            sessionStorage.setItem(
+                CONSENT_KEY,
+                JSON.stringify(consentRecord)
+            );
 
-            } catch (error) {
+            window.location.href =
+                "f1-instructions-draft.html";
 
-                consentStatus.textContent =
-                    "Your browser could not save the consent decision. Please enable session storage before continuing.";
+        } catch (error) {
 
-            }
+            consentStatus.textContent =
+                "Your browser could not save the consent decision. Please enable session storage before continuing.";
 
-        });
-    </script>
+        }
 
-</body>
-</html>
+    });
+</script>
