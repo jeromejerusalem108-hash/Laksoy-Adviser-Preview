@@ -234,7 +234,7 @@ function updateF1SubmissionStatus() {
     if (status) {
         status.textContent = allViewed
             ? "All five design presentations have been viewed. You may now review your responses."
-            : `${visited} of ${total} design presentations viewed.`;
+            : visited + " of " + total + " design presentations viewed.";
     }
 
     if (reviewButton) {
