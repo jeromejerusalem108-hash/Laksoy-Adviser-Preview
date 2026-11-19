@@ -1,4 +1,4 @@
-```javascript
+
 /*
  * PROJECT L.A.K.A.S.
  * F1 Evaluation Questionnaire
@@ -1626,4 +1626,3 @@ if (reviewResponsesButton) {
     );
 
 })();
-```
