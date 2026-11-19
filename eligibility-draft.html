@@ -230,6 +230,10 @@
             if (!selectedEligibility) return;
 
 if (selectedEligibility === "eligible") {
+    sessionStorage.setItem(
+    "project_lakas_age_eligible",
+    "true"
+);
 
     result.className = "message eligible";
 
@@ -255,6 +259,9 @@ if (selectedEligibility === "eligible") {
     `;
 
 } else {
+    sessionStorage.removeItem(
+    "project_lakas_age_eligible"
+);
                 result.className = "message ineligible";
 
                 result.textContent =
