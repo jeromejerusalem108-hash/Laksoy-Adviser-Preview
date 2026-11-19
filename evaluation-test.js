@@ -991,6 +991,7 @@ function isTrustedAppsScriptOrigin(origin) {
         return false;
     }
 }
+    
 
     // Display the submission result.
     function displaySubmissionResult(result) {
