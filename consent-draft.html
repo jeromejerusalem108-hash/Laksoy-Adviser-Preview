@@ -1,10 +1,21 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PROJECT L.A.K.A.S. | Participant Consent</title>
+
+    <!-- Age eligibility protection -->
+    <script>
+        const AGE_ELIGIBILITY_KEY =
+            "project_lakas_age_eligible";
+
+        if (
+            sessionStorage.getItem(AGE_ELIGIBILITY_KEY) !== "true"
+        ) {
+            window.location.replace("eligibility-draft.html");
+        }
+    </script>
 
     <style>
         * {
@@ -136,18 +147,8 @@
             }
         }
     </style>
-    <script>
-    const AGE_ELIGIBILITY_KEY =
-        "project_lakas_age_eligible";
-
-    if (
-        sessionStorage.getItem(AGE_ELIGIBILITY_KEY) !== "true"
-    ) {
-        window.location.replace("eligibility-draft.html");
-    }
-</script>
 </head>
-    
+
 <body>
 
     <header>
@@ -206,34 +207,6 @@
             </label>
         </section>
 
-        <section>
-            <h2>3. Optional Permission for Quotations</h2>
-
-            <p>
-                This is a separate and optional decision.
-                It concerns whether short, de-identified quotations
-                from your comments may be included in research
-                reporting. Your decision will not affect your
-                participation in the study.
-            </p>
-
-            <label class="choice">
-                <input type="radio" name="quotation" value="permit">
-                <span>
-                    I permit short de-identified quotations
-                    of my comments.
-                </span>
-            </label>
-
-            <label class="choice">
-                <input type="radio" name="quotation" value="decline">
-                <span>
-                    I do not permit quotations. A blank response
-                    means no quotation permission.
-                </span>
-            </label>
-        </section>
-
         <p id="consentStatus" role="alert" aria-live="polite"></p>
 
         <div class="navigation">
@@ -253,74 +226,68 @@
         PROJECT L.A.K.A.S. Research Team
     </footer>
 
+    <script>
+        const CONSENT_KEY = "project_lakas_f1_consent_v1";
 
-<script>
-    const CONSENT_KEY =
-        "project_lakas_f1_consent_v1";
+        const continueButton =
+            document.getElementById("continueButton");
 
-    const continueButton =
-        document.getElementById("continueButton");
+        const consentStatus =
+            document.getElementById("consentStatus");
 
-    const consentStatus =
-        document.getElementById("consentStatus");
+        continueButton.addEventListener("click", function(event) {
 
-    continueButton.addEventListener("click", function(event) {
+            event.preventDefault();
 
-        event.preventDefault();
+            const consentChoice =
+                document.querySelector(
+                    'input[name="consent"]:checked'
+                );
 
-        const consentChoice =
-            document.querySelector(
-                'input[name="consent"]:checked'
-            );
+            if (!consentChoice) {
+                consentStatus.textContent =
+                    "Please indicate whether you agree or decline participation.";
+                return;
+            }
 
-        const quotationChoice =
-            document.querySelector(
-                'input[name="quotation"]:checked'
-            );
+            if (consentChoice.value !== "agree") {
 
-        if (!consentChoice) {
-            consentStatus.textContent =
-                "Please indicate whether you agree or decline participation.";
-            return;
-        }
+                sessionStorage.removeItem(CONSENT_KEY);
 
-        if (consentChoice.value !== "agree") {
+                consentStatus.textContent =
+                    "You have declined participation. You cannot proceed to the evaluation.";
 
-            sessionStorage.removeItem(CONSENT_KEY);
+                return;
+            }
 
-            consentStatus.textContent =
-                "You have declined participation. You cannot proceed to the evaluation.";
+            // Retain quotationPermission for compatibility
+            // with the existing evaluation submission system.
+            // No quotation permission is requested from participants.
 
-            return;
-        }
+            const consentRecord = {
+                consent: "agree",
+                quotationPermission: "decline"
+            };
 
-        const quotationPermission =
-            quotationChoice &&
-            quotationChoice.value === "permit"
-                ? "permit"
-                : "decline";
+            try {
 
-        const consentRecord = {
-            consent: "agree",
-            quotationPermission: quotationPermission
-        };
+                sessionStorage.setItem(
+                    CONSENT_KEY,
+                    JSON.stringify(consentRecord)
+                );
 
-        try {
+                window.location.href =
+                    "f1-instructions-draft.html";
 
-            sessionStorage.setItem(
-                CONSENT_KEY,
-                JSON.stringify(consentRecord)
-            );
+            } catch (error) {
 
-            window.location.href =
-                "f1-instructions-draft.html";
+                consentStatus.textContent =
+                    "Your browser could not save the consent decision. Please enable session storage before continuing.";
 
-        } catch (error) {
+            }
 
-            consentStatus.textContent =
-                "Your browser could not save the consent decision. Please enable session storage before continuing.";
+        });
+    </script>
 
-        }
-
-    });
-</script>
+</body>
+</html>
