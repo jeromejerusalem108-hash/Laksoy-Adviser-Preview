@@ -1,10 +1,22 @@
-
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PROJECT L.A.K.A.S. | Participant Consent</title>
+
+    <!-- Age eligibility protection -->
+    <script>
+        const AGE_ELIGIBILITY_KEY =
+            "project_lakas_age_eligible";
+
+        if (
+            sessionStorage.getItem(AGE_ELIGIBILITY_KEY) !== "true"
+        ) {
+            window.location.replace("eligibility-draft.html");
+        }
+    </script>
 
     <style>
         * {
@@ -196,34 +208,6 @@
             </label>
         </section>
 
-        <section>
-            <h2>3. Optional Permission for Quotations</h2>
-
-            <p>
-                This is a separate and optional decision.
-                It concerns whether short, de-identified quotations
-                from your comments may be included in research
-                reporting. Your decision will not affect your
-                participation in the study.
-            </p>
-
-            <label class="choice">
-                <input type="radio" name="quotation" value="permit">
-                <span>
-                    I permit short de-identified quotations
-                    of my comments.
-                </span>
-            </label>
-
-            <label class="choice">
-                <input type="radio" name="quotation" value="decline">
-                <span>
-                    I do not permit quotations. A blank response
-                    means no quotation permission.
-                </span>
-            </label>
-        </section>
-
         <p id="consentStatus" role="alert" aria-live="polite"></p>
 
         <div class="navigation">
@@ -261,11 +245,6 @@
                     'input[name="consent"]:checked'
                 );
 
-            const quotationChoice =
-                document.querySelector(
-                    'input[name="quotation"]:checked'
-                );
-
             if (!consentChoice) {
                 consentStatus.textContent =
                     "Please indicate whether you agree or decline participation.";
@@ -282,15 +261,13 @@
                 return;
             }
 
-            const quotationPermission =
-                quotationChoice &&
-                quotationChoice.value === "permit"
-                    ? "permit"
-                    : "decline";
+            // Retain quotationPermission for compatibility
+            // with the existing evaluation submission system.
+            // No quotation permission is requested from participants.
 
             const consentRecord = {
                 consent: "agree",
-                quotationPermission: quotationPermission
+                quotationPermission: "decline"
             };
 
             try {
@@ -315,3 +292,4 @@
 
 </body>
 </html>
+```
