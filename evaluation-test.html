@@ -7,10 +7,47 @@
 
     <title>PROJECT L.A.K.A.S. | Evaluation</title>
 
-    <!-- Consent access protection -->
+    <!-- Age eligibility and consent access protection -->
     <script>
-        // TEMPORARY TESTING COPY ONLY.
-        // Consent protection remains unchanged in evaluation.html.
+        (() => {
+            const AGE_ELIGIBILITY_KEY =
+                "project_lakas_age_eligible";
+
+            const CONSENT_KEY =
+                "project_lakas_f1_consent_v1";
+
+            try {
+                // Require confirmation of the minimum age.
+                if (
+                    sessionStorage.getItem(AGE_ELIGIBILITY_KEY) !== "true"
+                ) {
+                    window.location.replace("eligibility-draft.html");
+                    return;
+                }
+
+                // Require a valid, affirmative consent record.
+                let consentRecord = null;
+
+                try {
+                    consentRecord = JSON.parse(
+                        sessionStorage.getItem(CONSENT_KEY) || "null"
+                    );
+                } catch (error) {
+                    consentRecord = null;
+                }
+
+                if (
+                    !consentRecord ||
+                    consentRecord.consent !== "agree"
+                ) {
+                    window.location.replace("consent-draft.html");
+                }
+
+            } catch (error) {
+                // If session storage cannot be checked, do not allow access.
+                window.location.replace("eligibility-draft.html");
+            }
+        })();
     </script>
 
     <style>
