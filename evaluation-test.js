@@ -664,9 +664,30 @@ function renderF1Questionnaire(sketchCode, position) {
         returnButton.style.fontWeight = "600";
         returnButton.style.cursor = "pointer";
 
-        returnButton.addEventListener("click", () => {
+        returnButton.addEventListener("click", (event) => {
+            // Keep this interaction inside the evaluation drawer.
+            // The HTML document-level outside-click handler must not close it.
+            event.stopPropagation();
+
             f1ReviewNavigationActive = false;
             returnButton.remove();
+
+            // Reopen the mobile evaluation drawer and hide its toggle before
+            // returning the participant to the response-review section.
+            if (window.innerWidth <= 760) {
+                const evaluationPanel =
+                    document.getElementById("evaluationPanel");
+                const drawerToggle =
+                    document.getElementById("drawerButton");
+
+                if (evaluationPanel) {
+                    evaluationPanel.classList.add("open");
+                }
+
+                if (drawerToggle) {
+                    drawerToggle.classList.add("hidden");
+                }
+            }
 
             const updatedReview = showF1ResponseReview();
 
