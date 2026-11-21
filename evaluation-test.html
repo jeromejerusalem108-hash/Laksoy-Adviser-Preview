@@ -799,6 +799,45 @@
         /* The green page watermark is intentionally omitted on the evaluation screen. */
         body::before {background:none!important;opacity:0!important}
   
+    
+        /* Evaluation header botanical accent and compact mobile viewport. */
+        .topbar {gap:12px!important;margin:0!important;padding-top:0!important;padding-bottom:0!important}
+        .topbar::before {
+            content:""!important;position:absolute!important;inset:0!important;
+            z-index:0!important;pointer-events:none!important;
+            background-image:url("assets/lakas-leaf-motif-gold.png")!important;
+            background-repeat:no-repeat!important;background-position:center center!important;
+            background-size:cover!important;opacity:.10!important;
+        }
+        .topbar > * {position:relative;z-index:1}
+        @media(min-width:761px){
+            .topbar {justify-content:flex-start!important}
+            .topbar select {margin-left:auto!important;margin-right:0!important}
+        }
+        @media(max-width:760px){
+            .topbar {height:52px!important;min-height:52px!important;margin:0!important}
+            .workspace {height:calc(100dvh - 52px)!important;margin:0!important;padding:0!important;top:0!important}
+            .model-viewer {margin:0!important;padding:0!important;top:0!important;display:block!important}
+            .model-viewer iframe {margin:0!important;padding:0!important;display:block!important}
+        }
+        /* Muted translucent response controls with heritage-gold lettering. */
+        .answer-options label {
+            background:rgba(21,57,31,.10)!important;
+            border-color:rgba(217,165,45,.48)!important;
+            color:#D9A52D!important;
+        }
+        .answer-options label:has(input:checked) {
+            background:rgba(21,57,31,.20)!important;
+            border-color:#D9A52D!important;
+            color:#D9A52D!important;
+        }
+        .answer-options label input {accent-color:#D9A52D!important}
+        .review-answer-row button {
+            color:#D9A52D!important;
+            background:rgba(21,57,31,.10)!important;
+            border-radius:5px!important;padding:5px 7px!important;
+        }
+
     </style>
 </head>
 
