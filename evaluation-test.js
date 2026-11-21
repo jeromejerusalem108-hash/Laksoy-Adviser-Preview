@@ -1298,10 +1298,9 @@ function showF1ResponseReview() {
             question.type = "button";
             question.style.flex = "1";
             question.style.padding = "6px 8px";
-            question.style.border = "1px solid rgba(217, 165, 45, 0.78)";
             question.style.borderRadius = "5px";
-            question.style.border = "0";
-            question.style.background = "rgba(21, 57, 31, 0.14)";
+            question.style.background = "rgba(21, 57, 31, 0.07)";
+            question.style.border = "1px solid rgba(217, 165, 45, 0.78)";
             question.style.color = "#D9A52D";
             question.style.fontFamily = "Arial, sans-serif";
             question.style.fontSize = "13px";
