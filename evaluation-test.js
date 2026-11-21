@@ -1297,10 +1297,11 @@ function showF1ResponseReview() {
 
             question.type = "button";
             question.style.flex = "1";
-            question.style.padding = "5px 7px";
+            question.style.padding = "6px 8px";
+            question.style.border = "1px solid rgba(217, 165, 45, 0.78)";
             question.style.borderRadius = "5px";
             question.style.border = "0";
-            question.style.background = "rgba(21, 57, 31, 0.10)";
+            question.style.background = "rgba(21, 57, 31, 0.14)";
             question.style.color = "#D9A52D";
             question.style.fontFamily = "Arial, sans-serif";
             question.style.fontSize = "13px";
@@ -1336,8 +1337,8 @@ function showF1ResponseReview() {
 
             if (value === "CJ") {
                 answerBadge.textContent = "CJ";
-                answerBadge.style.background = "rgba(217, 165, 45, 0.16)";
-                answerBadge.style.color = "#D9A52D";
+                answerBadge.style.background = "#fff1cc";
+                answerBadge.style.color = "#805500";
             } else if (
                 ["1", "2", "3", "4", "5"].includes(value)
             ) {
