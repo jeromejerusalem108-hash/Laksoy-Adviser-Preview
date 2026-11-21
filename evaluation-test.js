@@ -1299,9 +1299,9 @@ function showF1ResponseReview() {
             question.style.flex = "1";
             question.style.padding = "6px 8px";
             question.style.borderRadius = "5px";
-            question.style.background = "rgba(21, 57, 31, 0.07)";
-            question.style.border = "1px solid rgba(217, 165, 45, 0.78)";
-            question.style.color = "#15391F";
+            question.style.setProperty("background-color", "rgba(21, 57, 31, 0.07)", "important");
+            question.style.setProperty("border", "1px solid rgba(217, 165, 45, 0.78)", "important");
+            question.style.setProperty("color", "#15391F", "important");
             question.style.fontFamily = "Arial, sans-serif";
             question.style.fontSize = "13px";
             question.style.lineHeight = "1.5";
