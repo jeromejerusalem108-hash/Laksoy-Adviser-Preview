@@ -297,6 +297,34 @@
             .lakas-brand .lakas-emblem {width:clamp(104px,30vw,132px)!important;max-width:48vw!important}
         }
   
+    
+        /* Botanical frame motifs: green on ivory, gold on forest-green headers. */
+        body::before {
+            content:""!important;
+            position:fixed!important;inset:0!important;z-index:0!important;
+            pointer-events:none!important;
+            background-image:url("assets/lakas-leaf-motif-forest.png")!important;
+            background-repeat:no-repeat!important;
+            background-position:center center!important;
+            background-size:cover!important;
+            opacity:.055!important;
+        }
+        header::before,.hero::before {
+            content:""!important;
+            position:absolute!important;inset:0!important;
+            z-index:0!important;pointer-events:none!important;
+            background-image:url("assets/lakas-leaf-motif-gold.png")!important;
+            background-repeat:no-repeat!important;
+            background-position:center center!important;
+            background-size:cover!important;
+            opacity:.10!important;
+        }
+        header,.hero {position:relative!important;overflow:hidden!important}
+        header > *,.hero > * {position:relative;z-index:1}
+        @media(max-width:600px){
+            body::before,header::before,.hero::before {background-size:cover!important}
+        }
+ 
     </style>
 </head>
 
