@@ -1300,7 +1300,7 @@ function showF1ResponseReview() {
             question.style.padding = "0";
             question.style.border = "0";
             question.style.background = "transparent";
-            question.style.color = "#245b35";
+            question.style.color = "#39443d";
             question.style.fontFamily = "Arial, sans-serif";
             question.style.fontSize = "13px";
             question.style.lineHeight = "1.5";
@@ -1341,8 +1341,8 @@ function showF1ResponseReview() {
                 ["1", "2", "3", "4", "5"].includes(value)
             ) {
                 answerBadge.textContent = value;
-                answerBadge.style.background = "#e5f0e8";
-                answerBadge.style.color = "#245b35";
+                answerBadge.style.background = "#f1ead7";
+                answerBadge.style.color = "#51452d";
             } else {
                 answerBadge.textContent = "Not answered";
                 answerBadge.style.background = "#eeeeee";
