@@ -250,23 +250,39 @@
             width:50px!important;flex:0 0 50px!important;
             margin:0!important;
         }
-        .lakas-brand {width:100%;justify-content:center!important}
-        /* Restrained leaf sprigs: forest on light surfaces, gold on dark headers */
-        body::after {
-            content:"";position:fixed;left:50%;top:50%;width:230px;height:230px;
-            transform:translate(-50%,-50%);pointer-events:none;z-index:0;opacity:.035;
-            background-repeat:no-repeat;background-position:center;background-size:contain;
-            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240' fill='none' stroke='%2315391f' stroke-width='3'%3E%3Cpath d='M30 210C75 170 100 125 120 25M120 25C160 35 190 65 190 105C155 105 130 80 120 25ZM96 91C62 82 43 58 45 30C75 38 94 60 96 91ZM75 145C43 142 22 120 18 92C48 99 69 118 75 145ZM115 118C146 105 175 112 194 135C165 150 137 144 115 118Z'/%3E%3C/svg%3E");
-        }
-        header::before,.hero::before {
-            content:"";position:absolute;left:50%;top:50%;width:165px;height:165px;
-            transform:translate(-50%,-50%);pointer-events:none;opacity:.10;
-            background-repeat:no-repeat;background-position:center;background-size:contain;
-            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240' fill='none' stroke='%23d9a52d' stroke-width='3'%3E%3Cpath d='M30 210C75 170 100 125 120 25M120 25C160 35 190 65 190 105C155 105 130 80 120 25ZM96 91C62 82 43 58 45 30C75 38 94 60 96 91ZM75 145C43 142 22 120 18 92C48 99 69 118 75 145ZM115 118C146 105 175 112 194 135C165 150 137 144 115 118Z'/%3E%3C/svg%3E");
-        }
-        header > *, .hero > * {z-index:1}
-        @media(max-width:600px){.lakas-emblem{width:78px!important}}
+        .lakas-brand {width:100%;justify-content:center!important}@media(max-width:600px){.lakas-emblem{width:78px!important}}
 
+    
+        /* Centered forest-green page watermark and centered heritage-gold header watermark. */
+        body::before {
+            content:""!important;position:fixed!important;inset:0!important;z-index:0!important;
+            pointer-events:none!important;
+            background-image:url("assets/lakas-watermark-forest.png")!important;
+            background-repeat:no-repeat!important;background-position:center center!important;
+            background-size:clamp(280px,42vw,520px) auto!important;
+            opacity:.045!important;
+        }
+        header::after,.hero::after {
+            left:50%!important;right:auto!important;top:50%!important;bottom:auto!important;
+            transform:translate(-50%,-50%)!important;
+            width:clamp(170px,24vw,260px)!important;height:clamp(170px,24vw,260px)!important;
+            opacity:.10!important;pointer-events:none!important;
+        }
+        header,.hero {position:relative;overflow:hidden}
+        header > *,.hero > * {position:relative;z-index:1}
+        .lakas-brand {
+            width:100%!important;display:flex!important;justify-content:center!important;
+            align-items:center!important;margin:0 auto 16px!important;
+            position:relative!important;z-index:2!important;
+        }
+        .lakas-brand .lakas-emblem {
+            display:block!important;width:clamp(116px,16vw,156px)!important;
+            height:auto!important;max-width:42vw!important;margin:0 auto!important;
+        }
+        @media(max-width:600px){
+            .lakas-brand .lakas-emblem {width:clamp(104px,30vw,132px)!important;max-width:48vw!important}
+        }
+  
     </style>
 </head>
 
