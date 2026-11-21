@@ -1343,8 +1343,8 @@ function showF1ResponseReview() {
                 ["1", "2", "3", "4", "5"].includes(value)
             ) {
                 answerBadge.textContent = value;
-                answerBadge.style.background = "rgba(217, 165, 45, 0.16)";
-                answerBadge.style.color = "#D9A52D";
+                answerBadge.style.background = "#f1ead7";
+                answerBadge.style.color = "#51452d";
             } else {
                 answerBadge.textContent = "Not answered";
                 answerBadge.style.background = "#eeeeee";
