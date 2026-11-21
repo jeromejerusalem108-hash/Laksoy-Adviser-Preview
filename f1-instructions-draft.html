@@ -289,6 +289,44 @@
             .topbar strong {font-size:11px}
         }
 
+    
+        /* Final identity and layout corrections */
+        body::before {
+            background-position:center center!important;
+            background-size:min(220px,28vw) auto!important;
+            opacity:.045!important;
+        }
+        header::after,.hero::after {
+            left:50%!important;right:auto!important;bottom:-18px!important;
+            transform:translateX(-50%)!important;
+            width:145px!important;height:145px!important;
+            opacity:.12!important;
+        }
+        .lakas-emblem {
+            width:clamp(82px,9vw,104px)!important;
+            margin-left:auto!important;margin-right:auto!important;
+        }
+        .topbar .lakas-emblem {
+            width:50px!important;flex:0 0 50px!important;
+            margin:0!important;
+        }
+        .lakas-brand {width:100%;justify-content:center!important}
+        /* Restrained leaf sprigs: forest on light surfaces, gold on dark headers */
+        body::after {
+            content:"";position:fixed;left:50%;top:50%;width:230px;height:230px;
+            transform:translate(-50%,-50%);pointer-events:none;z-index:0;opacity:.035;
+            background-repeat:no-repeat;background-position:center;background-size:contain;
+            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240' fill='none' stroke='%2315391f' stroke-width='3'%3E%3Cpath d='M30 210C75 170 100 125 120 25M120 25C160 35 190 65 190 105C155 105 130 80 120 25ZM96 91C62 82 43 58 45 30C75 38 94 60 96 91ZM75 145C43 142 22 120 18 92C48 99 69 118 75 145ZM115 118C146 105 175 112 194 135C165 150 137 144 115 118Z'/%3E%3C/svg%3E");
+        }
+        header::before,.hero::before {
+            content:"";position:absolute;left:50%;top:50%;width:165px;height:165px;
+            transform:translate(-50%,-50%);pointer-events:none;opacity:.10;
+            background-repeat:no-repeat;background-position:center;background-size:contain;
+            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 240' fill='none' stroke='%23d9a52d' stroke-width='3'%3E%3Cpath d='M30 210C75 170 100 125 120 25M120 25C160 35 190 65 190 105C155 105 130 80 120 25ZM96 91C62 82 43 58 45 30C75 38 94 60 96 91ZM75 145C43 142 22 120 18 92C48 99 69 118 75 145ZM115 118C146 105 175 112 194 135C165 150 137 144 115 118Z'/%3E%3C/svg%3E");
+        }
+        header > *, .hero > * {z-index:1}
+        @media(max-width:600px){.lakas-emblem{width:78px!important}}
+
     </style>
 </head>
 
