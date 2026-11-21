@@ -132,12 +132,140 @@
             padding: 22px;
             font-size: 0.9rem;
         }
+    
+        /* PROJECT L.A.K.A.S. visual identity refinement */
+        :root {
+            --lakas-forest: #15391f;
+            --lakas-green: #244b35;
+            --lakas-gold: #d9a52d;
+            --lakas-ivory: #fff8e7;
+            --lakas-beige: #e8d8ad;
+            --lakas-earth: #51452d;
+            --lakas-ink: #26352b;
+            --lakas-card: rgba(255, 253, 247, 0.94);
+        }
+        body {
+            background-color: var(--lakas-ivory) !important;
+            color: var(--lakas-ink) !important;
+            background-image: url("assets/lakas-watermark-forest.png");
+            background-repeat: no-repeat;
+            background-position: right 7rem bottom 3rem;
+            background-size: min(38vw, 330px);
+            background-attachment: fixed;
+        }
+        header, .hero, .topbar {
+            background: var(--lakas-forest) !important;
+            border-bottom: 3px solid var(--lakas-gold);
+            position: relative;
+            overflow: hidden;
+        }
+        header::after, .hero::after {
+            content: "";
+            position: absolute;
+            inset: auto 1.5rem 0 auto;
+            width: 170px;
+            height: 170px;
+            background: url("assets/lakas-watermark-gold.png") center/contain no-repeat;
+            opacity: .11;
+            pointer-events: none;
+        }
+        header > *, .hero > *, .topbar > * {
+            position: relative;
+            z-index: 1;
+        }
+        .lakas-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin: 0 auto 12px;
+        }
+        .lakas-emblem {
+            display: block;
+            width: clamp(76px, 11vw, 112px);
+            height: auto;
+            aspect-ratio: 1;
+            object-fit: contain;
+            border-radius: 50%;
+            background: var(--lakas-ivory);
+            padding: 4px;
+            box-shadow: 0 5px 18px rgba(0,0,0,.2);
+        }
+        header h1, .hero h1 {
+            color: var(--lakas-ivory);
+            letter-spacing: .08em;
+            text-wrap: balance;
+        }
+        h1, h2, h3 {
+            font-family: Georgia, "Times New Roman", serif !important;
+        }
+        h2, h3 {
+            color: var(--lakas-forest) !important;
+        }
+        main {
+            position: relative;
+            z-index: 1;
+        }
+        main section, .section-card, .eligibility-card, .notice,
+        .intro, .rating-scale, .submission-section {
+            border-radius: 14px !important;
+        }
+        main section, .section-card, .eligibility-card {
+            background: var(--lakas-card) !important;
+            border: 1px solid rgba(217,165,45,.28);
+            box-shadow: 0 8px 26px rgba(31, 49, 32, .07) !important;
+        }
+        .notice {
+            background: #f2e9d2 !important;
+            border-left: 4px solid var(--lakas-gold) !important;
+        }
+        a, button, input, select, textarea {
+            accent-color: var(--lakas-green);
+        }
+        .navigation a, .action a, button, .next {
+            border-radius: 8px !important;
+            transition: transform .18s ease, background-color .18s ease, box-shadow .18s ease;
+        }
+        .navigation .next, .action a, button, .next {
+            background: var(--lakas-green) !important;
+            color: var(--lakas-ivory) !important;
+            border: 1px solid var(--lakas-gold);
+            box-shadow: 0 4px 12px rgba(21,57,31,.13);
+        }
+        .navigation a:hover, .action a:hover, button:hover, .next:hover {
+            background: var(--lakas-forest) !important;
+            transform: translateY(-1px);
+        }
+        footer {
+            background: var(--lakas-forest) !important;
+            border-top: 3px solid var(--lakas-gold);
+            color: var(--lakas-ivory) !important;
+        }
+        @media (max-width: 600px) {
+            body {
+                background-size: 190px auto;
+                background-position: right -55px bottom 5rem;
+            }
+            .lakas-brand {
+                flex-direction: column;
+                gap: 8px;
+            }
+            .lakas-emblem {
+                width: 78px;
+            }
+            header, .hero {
+                padding: 26px 16px !important;
+            }
+        }
+
     </style>
 </head>
 
 <body>
 
     <header>
+        <div class="lakas-brand"><img class="lakas-emblem" src="assets/lakas-emblem-original.jpg" alt="PROJECT L.A.K.A.S. official emblem"></div>
+        
         <h1>PROJECT L.A.K.A.S.</h1>
         <p>Participant Eligibility</p>
     </header>
